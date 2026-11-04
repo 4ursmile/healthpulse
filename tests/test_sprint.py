@@ -74,3 +74,64 @@ def test_retro_replay_rules():
     assert flat["a"] >= r["a"]  # growth projection never later than carry-forward on a rising curve
     quiet = np.full(52, 20.0)  # 1,040 cases: never epidemic, never alerted
     assert retro.replay_season(quiet, pop, 2, 4) == {"c": None, "a": None}
+
+
+def _ctx():
+    return {"screen": "story", "lang": "en", "state": "MG",
+            "replay_2023_24": {"label": "REPLAY", "incidence_per_100k_observed": 8350.0, "crossed_epidemic_level_week": "2024-01-07",
+                               "status_quo_would_see_it": "2024-01-21", "healthpulse_alert_week": "2023-12-10", "weeks_gained": 6,
+                               "weeks_gained_flat_rule": 4, "peak_week_observed": "2024-03-17"},
+            "alert_rule_track_record_2015_2022": {"label": "REPLAY", "epidemics": 85, "missed": 0, "median_weeks_gained": 7.0,
+                                                  "false_alarm_rate": 0.073},
+            "outlook_2026_27": None, "benchmark": {}, "definitions": {}}
+
+
+def test_rule_based_brief_uses_only_context_numbers():
+    from healthpulse.sprint import brief
+    t = brief.rule_based(_ctx())
+    assert "6 weeks earlier" in t and "2023-12-10" in t and "every 14 non-epidemic seasons" in t
+    assert "Rule-based brief" in t
+
+
+def _stream_events(text):
+    import json
+    out = []
+    for blk in text.split("\n\n"):
+        ev = next((l[7:] for l in blk.splitlines() if l.startswith("event: ")), "message")
+        data = next((l[6:] for l in blk.splitlines() if l.startswith("data: ")), None)
+        if data:
+            out.append((ev, json.loads(data)))
+    return out
+
+
+def test_brief_route_llm_and_fallback(client, tokens, monkeypatch):
+    from healthpulse.llm import client as llm
+    from healthpulse.sprint import brief
+    monkeypatch.setattr(brief, "context", lambda uf, lang="en": _ctx())
+    cfg = {"provider": "anthropic", "model": "claude-opus-5-5", "available": True, "enabled": True, "configured": True}
+    monkeypatch.setattr(llm, "config", lambda: cfg)
+    seen = {}
+
+    def fake_stream(system, user, max_tokens=8000):
+        seen["user"] = user
+        yield "**Situation** — "
+        yield "MG."
+    monkeypatch.setattr(llm, "stream", fake_stream)
+    ev = _stream_events(client.post("/api/v1/sprint/brief", json={"uf": "MG"}, headers=tokens["viewer"]).text)
+    assert ev[0][0] == "meta" and ev[0][1]["provider"] == "anthropic"
+    assert "".join(d.get("t", "") for e, d in ev if e == "message") == "**Situation** — MG."
+    assert '"weeks_gained": 6' in seen["user"]  # the model is given the grounded CONTEXT
+
+    def broken(*a, **k):
+        raise llm.LLMError("boom")
+        yield  # pragma: no cover
+    monkeypatch.setattr(llm, "stream", broken)
+    ev = _stream_events(client.post("/api/v1/sprint/brief", json={"uf": "MG"}, headers=tokens["viewer"]).text)
+    assert any(e == "error" for e, _ in ev)
+    assert "Rule-based brief" in "".join(d.get("t", "") for e, d in ev if e == "message")
+
+
+def test_decision_requires_reviewer(client, tokens):
+    assert client.post("/api/v1/sprint/decision", json={"uf": "MG", "decision": "approve"}, headers=tokens["viewer"]).status_code == 403
+    r = client.post("/api/v1/sprint/decision", json={"uf": "MG", "decision": "reject", "note": "t"}, headers=tokens["epi_reviewer"])
+    assert r.status_code == 200 and r.json()["data"]["decision"] == "reject"

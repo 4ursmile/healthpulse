@@ -16,6 +16,8 @@ export const SCREENS = [
   { k: "sandbox", g: "Plan", l: "Outbreak sandbox", ic: "exp", to: { vn: "/vn/sandbox" } },
   { k: "modellab", g: "Evidence", l: "Model lab", ic: "model", to: { br: "/model-lab" } },
   { k: "datalab", g: "Evidence", l: "Data lab", ic: "data", to: { global: "/data-lab", br: "/data-lab" } },
+  // kept last: SCREENS[0] is the fallback screen for every scope, and Story has no Viet Nam path
+  { k: "story", g: "Start", l: "Story", ic: "alert", to: { global: "/story", br: "/story" } },
 ];
 
 export const parseScope = (s) => {

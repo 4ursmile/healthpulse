@@ -171,6 +171,21 @@ Screens: **Viet Nam → Situation map** (`/vn`), **Response simulator** (`/vn/si
   `.env` and restart. The analyst streams a brief grounded on the screen's JSON, which can be inspected under
   "context sent". Without a key it gives a rule-based brief.
 
+## Demo path: the Story screen
+
+The app opens on **Story** (`/story`), which walks one flow end to end on the official IMDC data:
+
+1. **Would it have warned us?** The 2023-24 replay headline and the IMDC benchmark, with the honest reading.
+2. **Replay 2023-24.** One state's weekly curve with the HealthPulse alert, the epidemic-level crossing and the week threshold
+   monitoring would have seen it.
+3. **Next season.** The 2026-27 forecast (data to EW25 2026) and the largest expected seasons.
+4. **Brief & decide.** A grounded brief (Claude when configured, rule-based otherwise; the exact CONTEXT JSON it sees is shown)
+   and a human **Approve / Reject** that only an epidemiology reviewer or admin can make. It is written to the audit log.
+
+Prepare it once with `hp sprint && hp retro` (about 30 s). To have Claude write the brief, set `ANTHROPIC_API_KEY` in `.env`
+(the default model is `claude-opus-5-5`; Admin → Settings → AI analyst can switch it). Without a key everything still works with
+the rule-based brief.
+
 ## IMDC 2026 benchmark (Infodengue-Mosqlimate Dengue Challenge)
 
 `hp sprint` (about 15 s) replays the sprint's four validation tests on the **official sprint files**

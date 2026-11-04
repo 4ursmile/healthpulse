@@ -76,7 +76,12 @@ export function TimeChart({ observed = [], forecast = [], markers = [], height =
       ${yt.map((v) => html`<line x1=${pad.l} x2=${W - pad.r} y1=${Y(v)} y2=${Y(v)} stroke="var(--grid)" />
         <text x=${pad.l - 8} y=${Y(v) + 4} text-anchor="end">${yfmt(v)}</text>`)}
       ${xl.map((t) => html`<text x=${Math.min(W - pad.r - 20, Math.max(pad.l + 16, X(t)))} y=${height - 6} text-anchor="middle">${new Date(t).toLocaleDateString("en-US", { month: span > 400 ? undefined : "short", year: span > 400 ? "numeric" : "2-digit", timeZone: "UTC" })}</text>`)}
-      ${markers.map((m) => { const x = X(tms(m.t)); return x >= pad.l && x <= W - pad.r ? html`<line x1=${x} x2=${x} y1=${pad.t + ih - 6} y2=${pad.t + ih} stroke="var(--muted)"><title>${m.label}</title></line>` : null; })}
+      ${markers.map((m) => { const x = X(tms(m.t)); if (x < pad.l || x > W - pad.r) return null;
+        // m.line: a labelled full-height event line (m.color, m.dash); otherwise a small tick on the axis
+        return m.line ? html`<line x1=${x} x2=${x} y1=${pad.t} y2=${pad.t + ih} stroke=${m.color || "var(--muted)"} stroke-width="1.5" stroke-dasharray=${m.dash || "none"}><title>${m.label}</title></line>`
+          : html`<line x1=${x} x2=${x} y1=${pad.t + ih - 6} y2=${pad.t + ih} stroke="var(--muted)"><title>${m.label}</title></line>`; })}
+      ${markers.map((m, i) => { const x = X(tms(m.t)); return m.line && x >= pad.l && x <= W - pad.r
+        ? html`<text x=${x + 4} y=${pad.t + 12 + 14 * (m.row ?? i)} class="lbl" fill=${m.color || "var(--muted)"} style="paint-order:stroke;stroke:var(--surface);stroke-width:4px;stroke-linejoin:round">${m.short || m.label}</text>` : null; })}
       ${reference && html`<line x1=${pad.l} x2=${W - pad.r} y1=${Y(reference.value)} y2=${Y(reference.value)} stroke="var(--muted)" stroke-dasharray="4 3" />
         <text x=${W - pad.r} y=${Y(reference.value) - 4} text-anchor="end" class="lbl">${reference.label}</text>`}
       ${band && html`<polygon class="fadein" points=${band} fill="var(--chart-1)" fill-opacity="0.16" />`}

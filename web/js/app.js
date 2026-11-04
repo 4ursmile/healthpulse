@@ -10,7 +10,7 @@ export const Session = createContext({ me: null, can: () => false, reload: () =>
 export const useSession = () => useContext(Session);
 
 const ROUTES = [
-  ["/overview", "overview"], ["/explore", "explore"], ["/regions/:id", "region"], ["/diseases", "disease"], ["/diseases/:id", "disease"],
+  ["/story", "story"], ["/overview", "overview"], ["/explore", "explore"], ["/regions/:id", "region"], ["/diseases", "disease"], ["/diseases/:id", "disease"],
   ["/workforce", "workforce"], ["/facilities", "facilities"], ["/simulation", "simulation"], ["/simulation/runs/:run", "simrun"],
   ["/simulation/:id", "simulation"], ["/model-lab", "modellab"], ["/data-lab", "datalab"], ["/alerts", "alerts"], ["/login", "login"],
   ["/vn", "vn/dashboard"], ["/vn/simulate", "vn/simulate"], ["/vn/sandbox", "vn/sandbox"], ["/vn/ops", "vn/ops"],
@@ -41,7 +41,7 @@ function match(path) {
 }
 
 // product groups come from SCREENS (scope.js); only screens with data in the current scope are listed
-const GROUPS = ["Situation", "Plan", "Evidence"];
+const GROUPS = ["Start", "Situation", "Plan", "Evidence"];
 const ADMIN = { h: "Admin", admin: true, items: [["/admin", "Control center", "control"], ["/admin/sources", "Data sources", "source"],
     ["/admin/ingestions", "Ingestion runs", "runs"], ["/admin/catalog", "Catalog & quality", "catalog"], ["/admin/features", "Feature store", "feature"],
     ["/admin/datasets", "Training datasets", "dataset"], ["/admin/experiments", "Experiments", "exp"], ["/admin/registry", "Model registry", "registry", "reviews"],
@@ -253,7 +253,7 @@ function App() {
   }, [me?.role, loc.path]);
   useEffect(() => { setMenu(false); const m = document.getElementById("main"); if (m) m.scrollTo({ top: 0, behavior: "instant" }); }, [loc.path]);
   const session = useMemo(() => ({ me, can: (p) => !!me?.permissions?.includes(p), reload: loadMe }), [me]);
-  useEffect(() => { if (loc.path === "/" || loc.path === "") navigate("/overview", { replace: true }); }, [loc.path]);
+  useEffect(() => { if (loc.path === "/" || loc.path === "") navigate("/story", { replace: true }); }, [loc.path]);
   const route = match(loc.path);
   const crumbs = loc.path.split("/").filter(Boolean);
   const tree = useScopes();
