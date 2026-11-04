@@ -194,6 +194,13 @@ were scored once afterwards. Test 4 is scored through EW25 2026. This is not an 
 Mosqlimate API key. Submission CSVs in the template format, including a 2026-27 forecast made after the deadline, are written to
 `data/sprint/submission/<model>/<season>/<UF>.csv`.
 
+### 2023-24 retrospective (`hp retro`)
+
+In the record 2023-24 season, **all 19 states that passed the MoH epidemic level (300/100k) were warned before threshold
+monitoring would have seen it, a median of 6 weeks earlier**, with one false alarm (PE, at 284/100k). About 4 of those weeks
+come from projecting forward at all, and the growth model adds about 2. Full write-up, comparator and caveats:
+[`docs/CASE_STUDY_2023_24.md`](docs/CASE_STUDY_2023_24.md).
+
 ## Measured performance (this machine, 16 cores)
 
 | What | Result |

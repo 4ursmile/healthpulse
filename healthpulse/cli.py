@@ -222,6 +222,16 @@ def cmd_sprint(a):
     print(f"  {rep['submission_files']} submission CSVs in {get_settings().data_dir / 'sprint' / 'submission'}")
 
 
+def cmd_retro(a):
+    """2023-24 retrospective: weeks of early warning per state vs threshold monitoring, with false alarms 2015-2022."""
+    from .sprint import retro
+    r = retro.run(delay=a.delay, horizon=a.horizon)
+    for k in ("season_2023_24", "history_2015_2022"):
+        s, fl = r[k], r[k]["flat_comparator"]
+        print(f"  {k:18s} epidemics {s['epidemic']:3d}  missed {s['missed']}  median lead {s['lead_weeks_median']} wk "
+              f"(flat rule {fl['lead_weeks_median']})  false alarms {s['false_alarms']}/{s['non_epidemic']} (flat {fl['false_alarms']})")
+
+
 def cmd_synth(a):
     _init()
     _run("synthetic_sivep", {"rows": a.rows, "weeks": a.weeks}, target_type="source", target_id="sivep_gripe", actor_id="u_operator")
@@ -277,6 +287,10 @@ def main(argv: list[str] | None = None) -> None:
     sp = sub.add_parser("sprint", help="IMDC 2026 dengue challenge: replay validation tests 1-4, score (WIS), write submission CSVs")
     sp.add_argument("--fetch", action="store_true", help="re-download the official sprint files")
     sp.set_defaults(fn=cmd_sprint)
+    rt = sub.add_parser("retro", help="2023-24 dengue season replay: early-warning lead time per state (needs `hp sprint` data)")
+    rt.add_argument("--delay", type=int, default=2, help="reporting delay in weeks")
+    rt.add_argument("--horizon", type=int, default=4, help="projection horizon in weeks")
+    rt.set_defaults(fn=cmd_retro)
     y = sub.add_parser("synth-sivep")
     y.add_argument("--rows", type=int, default=1_000_000)
     y.add_argument("--weeks", type=int, default=52)

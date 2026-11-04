@@ -61,3 +61,16 @@ def test_no_lookahead(monkeypatch):
         assert np.allclose(x.q, y.q)
     q = a[0].q
     assert (np.diff(q, axis=1) >= -1e-9).all()  # quantiles are ordered
+
+
+def test_retro_replay_rules():
+    from healthpulse.sprint import retro
+    pop = 1e6  # threshold = 3,000 cumulative cases
+    rising = np.array([10, 20, 40, 80, 160, 320, 640, 1280, 2560, 2560, 1000, 500] + [50] * 40, float)
+    r = retro.replay_season(rising, pop, delay=2, horizon=4)
+    assert r["c"] == 8  # cumsum first exceeds 3,000 in week 8
+    assert r["a"] is not None and r["a"] < r["c"] + 2  # warned before the status quo sees it
+    flat = retro.replay_season(rising, pop, delay=2, horizon=4, growth=False)
+    assert flat["a"] >= r["a"]  # growth projection never later than carry-forward on a rising curve
+    quiet = np.full(52, 20.0)  # 1,040 cases: never epidemic, never alerted
+    assert retro.replay_season(quiet, pop, 2, 4) == {"c": None, "a": None}

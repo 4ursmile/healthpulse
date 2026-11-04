@@ -37,3 +37,15 @@ def sprint_forecast(request: Request, uf: str, season: str = "2026-2027", model:
     return envelope(out.with_columns(pl.col("date").cast(pl.Utf8)).to_dicts(), request,
                     meta={"uf": uf.upper(), "season": season, "model": model, "unit": "probable dengue cases per week",
                           "kind": "forecast"})
+
+
+@router.get("/sprint/retro")
+def sprint_retro(request: Request, a: Actor = Depends(require("read"))):
+    import json
+
+    from ...sprint import data as D
+    p = D.root() / "retro_2023_24.json"
+    if not p.exists():
+        raise HTTPException(404, "no retrospective yet: run `hp retro`")
+    rep = json.loads(p.read_text())
+    return envelope(rep, request, warnings=rep.get("caveats", []))
