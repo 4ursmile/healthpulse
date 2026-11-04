@@ -1,0 +1,257 @@
+# Generated from healthpulse/sources/catalog.py — the registry seeds from code; edit via Admin → Data sources.
+sources:
+- source_id: ibge_municipalities
+  display_name: IBGE municipality register
+  source_group: geography
+  connector_type: http_csv
+  status: available
+  pii_class: public
+  license_ref: IBGE codes and centroids via kelvins/municipios-brasileiros (MIT)
+  provenance_url: https://github.com/kelvins/municipios-brasileiros
+  expected_grain: municipality
+  expected_cadence: slow-moving
+  release_class: SLOW_MOVING
+  freshness_days: 3650
+  publication_lag_days: 0
+  approved_hostnames:
+  - raw.githubusercontent.com
+  config:
+    url: https://raw.githubusercontent.com/kelvins/municipios-brasileiros/main/csv/municipios.csv
+- source_id: ibge_geometry
+  display_name: IBGE municipal boundaries
+  source_group: geography
+  connector_type: georaster
+  status: available
+  pii_class: public
+  license_ref: IBGE malha municipal (public), mirrored by tbrugz/geodata-br (MIT);
+    verify-at-source
+  provenance_url: https://github.com/tbrugz/geodata-br
+  expected_grain: municipality polygon
+  expected_cadence: slow-moving
+  release_class: SLOW_MOVING
+  freshness_days: 3650
+  publication_lag_days: 0
+  approved_hostnames:
+  - raw.githubusercontent.com
+  config:
+    url: https://raw.githubusercontent.com/tbrugz/geodata-br/master/geojson/geojs-100-mun.json
+    simplify_tolerance_deg: 0.004
+- source_id: infodengue
+  display_name: InfoDengue
+  source_group: disease
+  connector_type: http_json
+  status: available
+  pii_class: aggregated
+  license_ref: InfoDengue (Fiocruz/FGV) open API; cite Codeço et al.; verify-at-source
+  provenance_url: https://info.dengue.mat.br/
+  expected_grain: municipality-week + release vintage
+  expected_cadence: weekly
+  release_class: RELEASED_PERIODIC
+  freshness_days: 14
+  publication_lag_days: 3
+  approved_hostnames:
+  - info.dengue.mat.br
+  config:
+    base_url: https://info.dengue.mat.br/api/alertcity
+    diseases:
+    - dengue
+    - chikungunya
+    start_year: 2018
+    rate_limit_s: 0.4
+- source_id: open_meteo
+  display_name: Open-Meteo historical weather
+  source_group: climate
+  connector_type: http_json
+  status: available
+  pii_class: public
+  license_ref: Open-Meteo CC BY 4.0 (ERA5 reanalysis, Copernicus)
+  provenance_url: https://open-meteo.com/en/docs
+  expected_grain: coordinate-day (reanalysis)
+  expected_cadence: daily
+  release_class: LIVE_EXTERNAL
+  freshness_days: 14
+  publication_lag_days: 6
+  approved_hostnames:
+  - archive-api.open-meteo.com
+  config:
+    base_url: https://archive-api.open-meteo.com/v1/archive
+    start_date: '2017-12-01'
+    batch_size: 10
+    min_weekly_coverage: 0.85
+- source_id: nager_holidays
+  display_name: Nager.Date public holidays
+  source_group: calendar
+  connector_type: http_json
+  status: available
+  pii_class: public
+  license_ref: Nager.Date MIT
+  provenance_url: https://date.nager.at/
+  expected_grain: country-date
+  expected_cadence: yearly
+  release_class: SLOW_MOVING
+  freshness_days: 365
+  publication_lag_days: 0
+  approved_hostnames:
+  - date.nager.at
+  config:
+    base_url: https://date.nager.at/api/v3/PublicHolidays
+    country: BR
+    start_year: 2017
+    years_ahead: 1
+- source_id: cnes_facilities_beds
+  display_name: CNES facilities and registered beds
+  source_group: healthcare
+  connector_type: http_json
+  status: available
+  pii_class: public
+  license_ref: Ministério da Saúde dados abertos (CNES); verify-at-source
+  provenance_url: https://apidadosabertos.saude.gov.br/
+  expected_grain: establishment / hospital
+  expected_cadence: monthly
+  release_class: RELEASED_PERIODIC
+  freshness_days: 60
+  publication_lag_days: 30
+  approved_hostnames:
+  - apidadosabertos.saude.gov.br
+  config:
+    facilities_url: https://apidadosabertos.saude.gov.br/cnes/estabelecimentos
+    beds_url: https://apidadosabertos.saude.gov.br/assistencia-a-saude/hospitais-e-leitos
+    page_size: 20
+    max_pages_per_municipality: 400
+    rate_limit_s: 0.15
+- source_id: sivep_gripe
+  display_name: SIVEP-Gripe SARI (bulk export)
+  source_group: disease
+  connector_type: file_upload
+  status: manual_import_required
+  pii_class: restricted_personal
+  license_ref: OpenDataSUS SRAG; row-level personal data restricted — aggregated on
+    import
+  provenance_url: https://dadosabertos.saude.gov.br/dataset/srag-2019-a-2026
+  expected_grain: case row -> municipality-week
+  expected_cadence: weekly
+  release_class: RELEASED_PERIODIC
+  freshness_days: 14
+  publication_lag_days: 7
+  approved_hostnames:
+  - s3.sa-east-1.amazonaws.com
+  config:
+    delimiter: ;
+    small_cell_suppression: 0
+- source_id: brazil_dengue_multimodal
+  display_name: Brazil Dengue Multimodal (Zenodo)
+  source_group: disease
+  connector_type: bulk_archive
+  status: manual_import_required
+  pii_class: aggregated
+  license_ref: Zenodo record 22029053 — license verify-at-source
+  provenance_url: https://zenodo.org/records/22029053
+  expected_grain: municipality-week
+  expected_cadence: frozen
+  release_class: SLOW_MOVING
+  freshness_days: null
+  publication_lag_days: null
+  approved_hostnames: []
+  config: {}
+- source_id: meta_mobility
+  display_name: Meta Movement Distribution
+  source_group: mobility
+  connector_type: bulk_archive
+  status: needs_authorization
+  pii_class: aggregated
+  license_ref: Data for Good license agreement required
+  provenance_url: https://ai.meta.com/ai-for-good/datasets/movement-distribution-maps/
+  expected_grain: geo unit-day distance bands
+  expected_cadence: daily
+  release_class: LIVE_EXTERNAL
+  freshness_days: 14
+  publication_lag_days: 2
+  approved_hostnames: []
+  config: {}
+- source_id: ibge_commuting
+  display_name: IBGE census commuting (OD)
+  source_group: mobility
+  connector_type: file_upload
+  status: manual_import_required
+  pii_class: aggregated
+  license_ref: IBGE census tables
+  provenance_url: https://www.ibge.gov.br/
+  expected_grain: origin-destination
+  expected_cadence: census
+  release_class: SLOW_MOVING
+  freshness_days: null
+  publication_lag_days: null
+  approved_hostnames: []
+  config: {}
+- source_id: worldpop
+  display_name: WorldPop population rasters
+  source_group: population
+  connector_type: georaster
+  status: manual_import_required
+  pii_class: public
+  license_ref: WorldPop CC BY 4.0
+  provenance_url: https://hub.worldpop.org/
+  expected_grain: raster/year
+  expected_cadence: yearly
+  release_class: SLOW_MOVING
+  freshness_days: null
+  publication_lag_days: null
+  approved_hostnames: []
+  config: {}
+- source_id: geoboundaries
+  display_name: geoBoundaries ADM2
+  source_group: geography
+  connector_type: georaster
+  status: available
+  pii_class: public
+  license_ref: CC BY 3.0 IGO
+  provenance_url: https://www.geoboundaries.org/
+  expected_grain: polygon
+  expected_cadence: slow-moving
+  release_class: SLOW_MOVING
+  freshness_days: null
+  publication_lag_days: null
+  approved_hostnames:
+  - www.geoboundaries.org
+  config:
+    meta_url: https://www.geoboundaries.org/api/current/gbOpen/BRA/ADM2/
+    note: 'Probe only: polygons carry no IBGE code, so name-based crosswalk is refused;
+      IBGE geometry is the authority.'
+- source_id: ibge_cempre
+  display_name: IBGE CEMPRE workforce by sector
+  source_group: workforce
+  connector_type: file_upload
+  status: manual_import_required
+  pii_class: aggregated
+  license_ref: IBGE SIDRA
+  provenance_url: https://sidra.ibge.gov.br/
+  expected_grain: municipality-year-sector
+  expected_cadence: yearly
+  release_class: SLOW_MOVING
+  freshness_days: null
+  publication_lag_days: 365
+  approved_hostnames: []
+  config:
+    columns:
+    - municipality_id
+    - year
+    - cnae_section
+    - formal_workers
+- source_id: synthetic_fixture
+  display_name: Synthetic fixture generator
+  source_group: fixture
+  connector_type: synthetic
+  status: available
+  pii_class: synthetic
+  license_ref: Generated locally — SYNTHETIC, never a data product
+  provenance_url: null
+  expected_grain: any
+  expected_cadence: on demand
+  release_class: SYNTHETIC_FIXTURE
+  freshness_days: null
+  publication_lag_days: null
+  approved_hostnames: []
+  config:
+    kinds:
+    - disease_weekly
+    - sivep_rows

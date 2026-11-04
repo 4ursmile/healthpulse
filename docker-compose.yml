@@ -1,0 +1,21 @@
+# docker compose up --build   → http://localhost:8080
+# One-time real-data bootstrap (ingest → features → dataset → train → review → champion → forecast → scenario):
+#   docker compose run --rm worker hp demo
+services:
+  api:
+    build: .
+    ports: ["8080:8080"]
+    env_file: [.env]
+    volumes: [hpdata:/srv/data, hpartifacts:/srv/artifacts]
+    depends_on: [worker]
+    restart: unless-stopped
+  worker:
+    build: .
+    command: ["python", "-m", "healthpulse.worker", "--concurrency", "2"]
+    env_file: [.env]
+    volumes: [hpdata:/srv/data, hpartifacts:/srv/artifacts]
+    stop_grace_period: 30s
+    restart: unless-stopped
+volumes:
+  hpdata: {}
+  hpartifacts: {}

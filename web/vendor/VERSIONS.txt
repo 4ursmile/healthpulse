@@ -1,0 +1,1 @@
+maplibre-gl 4.7.1 (BSD-3); preact+htm (MIT, from aihub-ui); IBM Plex Sans/Mono 5.1.1 (OFL) via @fontsource

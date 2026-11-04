@@ -1,0 +1,13 @@
+.venv/
+__pycache__/
+*.pyc
+data/
+artifacts/
+.env
+.taste-skill/
+*.egg-info/
+.claude/
+.pytest_cache/
+.DS_Store
+.env.*
+!.env.example

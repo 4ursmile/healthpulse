@@ -1,0 +1,6 @@
+.venv
+data
+artifacts
+.taste-skill
+**/__pycache__
+.env

@@ -1,0 +1,213 @@
+# Built-in feature definitions (allowlisted templates; no user code).
+features:
+- feature_id: cases_lag_1w
+  group: epidemiology
+  template: lag
+  unit: log(1+cases)
+  description: Reported cases in the last completed week before issue (log1p).
+  params:
+    table: cases
+    column: observed_cases
+    lag_weeks: 1
+    transform: log1p
+- feature_id: cases_lag_2w
+  group: epidemiology
+  template: lag
+  unit: log(1+cases)
+  description: Reported cases two weeks before issue (log1p).
+  params:
+    table: cases
+    column: observed_cases
+    lag_weeks: 2
+    transform: log1p
+- feature_id: cases_lag_3w
+  group: epidemiology
+  template: lag
+  unit: log(1+cases)
+  description: Reported cases three weeks before issue (log1p).
+  params:
+    table: cases
+    column: observed_cases
+    lag_weeks: 3
+    transform: log1p
+- feature_id: cases_lag_4w
+  group: epidemiology
+  template: lag
+  unit: log(1+cases)
+  description: Reported cases four weeks before issue (log1p).
+  params:
+    table: cases
+    column: observed_cases
+    lag_weeks: 4
+    transform: log1p
+- feature_id: cases_mean_8w
+  group: epidemiology
+  template: rolling
+  unit: log(1+cases)
+  description: Mean weekly reported cases over the 8 completed weeks before issue
+    (log1p).
+  params:
+    table: cases
+    column: observed_cases
+    end_lag_weeks: 1
+    window_weeks: 8
+    agg: mean
+    min_periods: 6
+    transform: log1p
+- feature_id: cases_growth_2w
+  group: epidemiology
+  template: growth
+  unit: log ratio
+  description: Log growth of reported cases between lag 3 and lag 1.
+  params:
+    table: cases
+    column: observed_cases
+    lag_weeks: 1
+    span_weeks: 2
+- feature_id: cases_same_week_last_year
+  group: epidemiology
+  template: seasonal_lag
+  unit: log(1+cases)
+  description: Reported cases in the same epi-week one year before the target week
+    (log1p).
+  params:
+    table: cases
+    column: observed_cases
+    transform: log1p
+- feature_id: incidence_lag_1w
+  group: epidemiology
+  template: incidence
+  unit: cases per 100k
+  description: Last completed week's reported cases per 100,000 residents (population
+    as of the prior year).
+  params:
+    table: cases
+    lag_weeks: 1
+- feature_id: rain_sum_4w
+  group: climate
+  template: rolling
+  unit: mm
+  description: Total rainfall over the four fully released weeks ending two weeks
+    before issue.
+  params:
+    table: weather_weekly
+    column: rain_mm_sum
+    end_lag_weeks: 2
+    window_weeks: 4
+    agg: sum
+    min_periods: 3
+- feature_id: rain_sum_8w_lag6
+  group: climate
+  template: rolling
+  unit: mm
+  description: Total rainfall over 8 weeks ending six weeks before issue (lagged vector
+    response).
+  params:
+    table: weather_weekly
+    column: rain_mm_sum
+    end_lag_weeks: 6
+    window_weeks: 8
+    agg: sum
+    min_periods: 6
+- feature_id: temp_mean_4w
+  group: climate
+  template: rolling
+  unit: °C
+  description: Mean 2 m temperature over four released weeks ending two weeks before
+    issue.
+  params:
+    table: weather_weekly
+    column: t2m_mean
+    end_lag_weeks: 2
+    window_weeks: 4
+    agg: mean
+    min_periods: 3
+- feature_id: temp_max_4w
+  group: climate
+  template: rolling
+  unit: °C
+  description: Maximum daily 2 m temperature over four released weeks ending two weeks
+    before issue.
+  params:
+    table: weather_weekly
+    column: t2m_max
+    end_lag_weeks: 2
+    window_weeks: 4
+    agg: max
+    min_periods: 3
+- feature_id: rh_mean_4w
+  group: climate
+  template: rolling
+  unit: '%'
+  description: Mean relative humidity over four released weeks ending two weeks before
+    issue.
+  params:
+    table: weather_weekly
+    column: rh_mean
+    end_lag_weeks: 2
+    window_weeks: 4
+    agg: mean
+    min_periods: 3
+- feature_id: holiday_in_target_week
+  group: holiday
+  template: holiday_window
+  unit: count
+  description: National public holidays falling in the target week (known in advance).
+  params:
+    relative_to: target
+    start_offset_days: 0
+    end_offset_days: 7
+- feature_id: holiday_prev_2w_of_target
+  group: holiday
+  template: holiday_window
+  unit: count
+  description: National public holidays in the two weeks before the target week.
+  params:
+    relative_to: target
+    start_offset_days: -14
+    end_offset_days: 0
+- feature_id: season_sin
+  group: calendar
+  template: calendar
+  unit: unitless
+  description: Annual seasonality of the target week (sine).
+  params:
+    fn: sin
+- feature_id: season_cos
+  group: calendar
+  template: calendar
+  unit: unitless
+  description: Annual seasonality of the target week (cosine).
+  params:
+    fn: cos
+- feature_id: log_population
+  group: population
+  template: static_asof
+  unit: log(residents)
+  description: Resident population as of the year before issue (log).
+  params:
+    table: population_annual
+    column: population
+    transform: log
+- feature_id: commuter_pressure_lag_1w
+  group: mobility
+  template: neighbor_pressure
+  unit: proxy
+  description: Σ commuters j→i × prior-week cases_j / population_j. Proxy of exposure
+    connectivity, not imported infections.
+  params:
+    lag_weeks: 1
+- feature_id: rain_sum_1w_lag1
+  group: climate
+  template: rolling
+  unit: mm
+  description: Rain in the week just before issue — reanalysis is not released yet
+    at issue time (PIT test).
+  params:
+    table: weather_weekly
+    column: rain_mm_sum
+    end_lag_weeks: 1
+    window_weeks: 1
+    agg: sum
+    min_periods: 1
+  state: 'draft (PIT test: expected to be leak_blocked)'

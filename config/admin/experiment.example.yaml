@@ -1,0 +1,22 @@
+experiment:
+  dataset_id: "<from Admin \u2192 Training datasets>"
+  name: Dengue pilot backtest
+  recipes:
+  - recipe: persistence
+  - recipe: seasonal_naive
+  - recipe: historical_median
+  - recipe: glm_poisson
+    params:
+      alpha: 0.001
+  - recipe: hgb_poisson
+    params:
+      max_iter: 150
+      learning_rate: 0.08
+  calibration:
+    method: out_of_fold_residual
+    nominal_coverage: 0.8
+  resources:
+    max_cpu: 2
+    timeout_minutes: 30
+  ablation: true
+  seed: 42

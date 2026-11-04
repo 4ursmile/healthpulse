@@ -1,0 +1,16 @@
+/* admin screens */
+/* phone: tab rows wrap instead of running off the screen edge */
+@media (max-width:640px){
+  .page .tabs{flex-wrap:wrap;gap:0 16px;overflow:visible}
+  .page .steps{gap:2px}
+  .kpi .v{white-space:normal}
+}
+.kpi .v{overflow-wrap:anywhere}
+/* settings: label column + soft panel (framed-sheet settings pattern) */
+.setrow{display:grid;grid-template-columns:minmax(0,380px) minmax(0,1fr);gap:var(--gap);padding-bottom:32px;border-bottom:1px solid var(--border)}
+.setrow:last-child{border-bottom:0}
+.setlbl h2{margin-top:6px}
+.setpanel{background:var(--raised);border-radius:16px;padding:16px}
+.setpanel input{background:var(--surface)}
+@media (max-width:900px){.setrow{grid-template-columns:minmax(0,1fr)}}
+.page h1{overflow-wrap:anywhere}

@@ -1,0 +1,46 @@
+# Every value here is a labelled planner assumption, not data.
+name: "Holiday surge preparedness \u2014 6 mobile teams"
+mode: operational
+forecast_id: <published forecast_id>
+disease_id: dengue
+region_ids: []
+window:
+  start_week: null
+  weeks: 4
+stressors:
+  holiday_surge_pct: 25.0
+  weather_stress_pct: 0.0
+  weather_use: none
+  trial_correlation: 0.5
+resources:
+  mobile_teams_available: 6
+  visits_per_team_per_week: 35.0
+  cost_per_team_week_brl: 2500.0
+  cost_per_km_brl: 1.2
+  max_travel_minutes: 600.0
+  speed_kmh: 50.0
+  total_budget_brl: 90000.0
+  team_bases: []
+  teams_removed: 0
+  effective_visit_capacity_source: planner_input
+  max_teams_per_region: 10
+capacity:
+  basis: per_10k_residents
+  visits_per_10k_residents_per_week: 0.08
+  explicit_visits_per_week: {}
+  existing_teams: {}
+  site_closure_share: {}
+assumptions:
+  visit_rate: 0.3
+  visit_rate_basis: scenario_assumption
+  equity_alpha: 0.5
+  equity_weight_basis: facilities_per_capita_gap
+  equity_floor_regions: 0
+  travel_cost_weight: 0.01
+simulation:
+  draws: 200
+  random_seed: 42
+  solver: auto
+transmission: null
+required_approval: human_planner
+notes: null
