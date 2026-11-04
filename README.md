@@ -171,6 +171,29 @@ Screens: **Viet Nam → Situation map** (`/vn`), **Response simulator** (`/vn/si
   `.env` and restart. The analyst streams a brief grounded on the screen's JSON, which can be inspected under
   "context sent". Without a key it gives a rule-based brief.
 
+## IMDC 2026 benchmark (Infodengue-Mosqlimate Dengue Challenge)
+
+`hp sprint` (about 15 s) replays the sprint's four validation tests on the **official sprint files**
+(`ftp://info.dengue.mat.br/data_imdc_2026`, downloaded to `data/sprint/raw/`). Each test trains on data up to EW25 and forecasts
+weekly probable dengue cases for **every state except ES** from EW41 to EW40 of the next year, which is 16 to 68 weeks ahead.
+Scoring is the sprint's weekly WIS on the median and the 50/80/90/95% intervals. Code: `healthpulse/sprint/`,
+`scripts/bench_sprint.py`, API `/api/v1/sprint/report` and `/api/v1/sprint/forecast/{UF}`.
+
+| Model | rel WIS (each state equal) | mean WIS (cases) | 90% coverage | season-total error (median abs log ratio) |
+|---|---|---|---|---|
+| Climatology (reference) | 1.00 | 1,361 | 0.75 | 0.78 |
+| **HealthPulse shifted climatology** | 1.09 | 1,102 | 0.83 | 0.60 |
+| Scenario + climatology blend | 1.07 | 1,152 | 0.90 | 0.66 |
+| Season total x past shapes | 1.35 | 1,050 | 0.95 | 0.59 |
+
+The shifted model takes each state's own climatological distribution for each season week and moves it by the anomaly
+predicted from what is known at EW25: the running season's size and tail, recent regime, and ENSO. It cuts case-weighted
+WIS by 19% and the season-total error by a quarter. It is **not** better than climatology when every state counts equally,
+because it loses in small states and in 2025-26. Model choices were made on 2015-2021 only (rel WIS 0.92 there), and the tests
+were scored once afterwards. Test 4 is scored through EW25 2026. This is not an official ranking: other teams' forecasts need a
+Mosqlimate API key. Submission CSVs in the template format, including a 2026-27 forecast made after the deadline, are written to
+`data/sprint/submission/<model>/<season>/<UF>.csv`.
+
 ## Measured performance (this machine, 16 cores)
 
 | What | Result |

@@ -15,7 +15,7 @@ from ..bootstrap import init
 from ..config import ROOT
 from ..core.util import new_id
 from ..features.pit import CardinalityError, LeakageError
-from .routes import admin_data, admin_ml, ai, geo, nowcast, ops, public, scenarios, scope, vietnam, vn_calibration, vn_sandbox
+from .routes import admin_data, admin_ml, ai, geo, nowcast, ops, public, scenarios, scope, sprint, vietnam, vn_calibration, vn_sandbox
 
 log = logging.getLogger("healthpulse.api")
 
@@ -70,7 +70,7 @@ def create_app() -> FastAPI:
     async def card_exc(request: Request, exc: CardinalityError):
         return err(request, 422, f"cardinality violation: {exc}")
 
-    for r in (public.router, scope.router, scenarios.router, admin_data.router, admin_ml.router, ai.router, vn_sandbox.router, vn_calibration.router, vietnam.router, nowcast.router, geo.router, ops.router):
+    for r in (public.router, scope.router, scenarios.router, admin_data.router, admin_ml.router, ai.router, vn_sandbox.router, vn_calibration.router, vietnam.router, nowcast.router, geo.router, ops.router, sprint.router):
         app.include_router(r, prefix="/api/v1")
 
     if WEB.exists():

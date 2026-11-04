@@ -211,6 +211,17 @@ def cmd_nowcast(a):
         print(f"  hold-out WAPE {h.get('holdout_wape'):.3f} (raw count {h.get('holdout_wape_naive'):.3f}), 80% coverage {h.get('holdout_cov80'):.2f}")
 
 
+def cmd_sprint(a):
+    """IMDC 2026 (Infodengue-Mosqlimate) state-level dengue challenge: replay the validation tests, score, write submissions."""
+    from .sprint import run as sr
+    rep = sr.run(fetch=a.fetch)
+    print(f"  IMDC validation tests {', '.join(rep['protocol']['tests'].values())}  ({rep['elapsed_s']}s)")
+    print(f"  {'model':34s} {'rel WIS':>8s} {'mean WIS':>9s} {'cov90':>6s}")
+    for b in rep["leaderboard"]:
+        print(f"  {b['label'][:34]:34s} {b['rel_wis']:8.3f} {b['mean_wis']:9.0f} {b['cov90']:6.2f}{'  <- champion' if b['champion'] else ''}")
+    print(f"  {rep['submission_files']} submission CSVs in {get_settings().data_dir / 'sprint' / 'submission'}")
+
+
 def cmd_synth(a):
     _init()
     _run("synthetic_sivep", {"rows": a.rows, "weeks": a.weeks}, target_type="source", target_id="sivep_gripe", actor_id="u_operator")
@@ -263,6 +274,9 @@ def main(argv: list[str] | None = None) -> None:
     n.add_argument("--disease", choices=["covid19_sari", "influenza_sari"], default=None, help="default: both")
     n.add_argument("--asof", default=None, help="ISO date; the report week containing it (default: last fully ended week of data)")
     n.set_defaults(fn=cmd_nowcast)
+    sp = sub.add_parser("sprint", help="IMDC 2026 dengue challenge: replay validation tests 1-4, score (WIS), write submission CSVs")
+    sp.add_argument("--fetch", action="store_true", help="re-download the official sprint files")
+    sp.set_defaults(fn=cmd_sprint)
     y = sub.add_parser("synth-sivep")
     y.add_argument("--rows", type=int, default=1_000_000)
     y.add_argument("--weeks", type=int, default=52)

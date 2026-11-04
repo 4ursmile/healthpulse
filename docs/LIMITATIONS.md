@@ -66,6 +66,10 @@ Fetch any of these with `hp ingest <source_id>`, `hp fetch` (everything still mi
     effective-sample-size cap and may drift as reporting practice changes. **No nowcast exists for Viet Nam:** there is no
     line list with entry dates, so none is simulated or borrowed from Brazil.
 
+12. **The IMDC benchmark is self-scored.** `hp sprint` reproduces the sprint protocol and metric but compares only with our
+    own climatology reference; other teams' submissions need a Mosqlimate API key. The champion beats climatology on
+    case-weighted WIS (-19%) but not on the state-equal score (1.09). Season-ahead dengue size is largely unpredictable at
+    EW25 (the national year effect swings about +-1 log unit).
 
 ## Viet Nam module
 
