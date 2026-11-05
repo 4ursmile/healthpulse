@@ -304,7 +304,7 @@ def ask(iid: str, actor: str, question: str, lang: str = "en", history: list[dic
 
 def _claude_loop(ctx: Ctx, question: str, lang: str, history: list[dict], cfg: dict) -> Iterator[tuple[str, dict]]:
     import anthropic
-    client = anthropic.Anthropic(max_retries=2, timeout=180.0)
+    client = llm.claude_client(cfg)
     q = question.strip() or ("Tình hình hiện tại thế nào và nên làm gì tiếp?" if lang == "vi" else "What is the situation and what should we do next?")
     msgs: list = [m for m in history[-6:] if m.get("role") in ("user", "assistant") and isinstance(m.get("content"), str) and m["content"].strip()]
     msgs.append({"role": "user", "content": f"[incident {ctx.an['incident']['name']} · {ctx.an['incident']['mode']} · as of {ctx.an['as_of']} · answer in {'Vietnamese' if lang == 'vi' else 'English'}]\n\n{q}"})
@@ -312,7 +312,7 @@ def _claude_loop(ctx: Ctx, question: str, lang: str, history: list[dict], cfg: d
               tools=tool_defs(ctx.can_propose))
     if cfg["effort"] in llm.EFFORTS:
         kw["output_config"] = {"effort": cfg["effort"]}
-    use_fallback = os.environ.get("HP_LLM_FALLBACK", "1") == "1" and cfg["model"].startswith(("claude-opus-5", "claude-fable-5", "claude-sonnet-5-5"))
+    use_fallback = llm.use_fallback(cfg)
     for turn in range(MAX_TURNS):
         try:
             ctxm = (client.beta.messages.stream(betas=["server-side-fallback-2026-07-01"], fallbacks="default", messages=msgs, **kw)
@@ -335,7 +335,7 @@ def _claude_loop(ctx: Ctx, question: str, lang: str, history: list[dict], cfg: d
         except anthropic.APIStatusError as e:
             raise llm.LLMError(f"Claude API error {e.status_code}")
         except anthropic.APIConnectionError:
-            raise llm.LLMError("Claude: network error (is api.anthropic.com reachable?)")
+            raise llm.LLMError(f"Claude: network error (is {cfg['base_url']} reachable?)")
         if final.stop_reason == "refusal":
             yield "text", {"t": "\n\n_The model declined this request._"}
             return

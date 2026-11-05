@@ -33,19 +33,21 @@ function AiSettings() {
     <div class="setpanel">${!v ? html`<${SkBlock} h=${160} />` : html`<div class="stack" style="gap:14px">
       <div class="row wrap" style="gap:8px">
         <span class=${"pill " + (c.available ? "ok" : c.configured ? "warn" : "")}>${c.available ? "AI available" : !c.enabled ? "AI off — rule-based" : !c.configured ? "Not configured — rule-based" : "Cooling down after an error"}</span>
-        <span class="small muted">Keys: Anthropic ${c.keys.anthropic ? "✓ set" : "— missing"} · OpenAI-compatible ${c.keys.openai ? "✓ set" : "— missing"} · active ${c.provider}${c.model ? ` · ${c.model}` : ""} (from ${c.source})</span>
+        <span class="small muted">Keys: Anthropic ${c.keys.anthropic ? "✓ set" : "— missing"} · OpenAI-compatible ${c.keys.openai ? "✓ set" : "— missing"} · active ${c.provider}${c.model ? ` · ${c.model}` : ""}${c.custom_endpoint ? ` · via ${c.base_url}` : ""} (from ${c.source})</span>
         ${c.health?.error && html`<span class="small" style="color:var(--negative)">last error: ${c.health.error}</span>`}
       </div>
       <label class="row" style="gap:8px"><input type="checkbox" checked=${v.enabled} onChange=${(e) => set({ ...v, enabled: e.target.checked })} />Use the AI (turn off to force rule-based analysis everywhere)</label>
       <div class="fgrid">
-        <${Field} label="Provider" id="ai-prov"><${Seg} label="Provider" value=${v.provider} onChange=${(p) => { set({ ...v, provider: p, model: p === "anthropic" ? "claude-opus-5-5" : p === "openai" ? "" : v.model }); setModels(null); }}
+        <${Field} label="Provider" id="ai-prov"><${Seg} label="Provider" value=${v.provider} onChange=${(p) => { set({ ...v, provider: p, model: p === "anthropic" ? "claude-opus-5-5" : p === "openai" ? "" : v.model, base_url: "" }); setModels(null); }}
           options=${[["auto", "Auto"], ["anthropic", "Claude"], ["openai", "OpenAI-compatible"]]} /></${Field}>
         <${Field} label="Effort (Claude)" id="ai-eff" hint="higher = deeper analysis, slower and costlier"><${Seg} label="Effort" value=${v.effort} onChange=${(e) => set({ ...v, effort: e })} options=${q.data.efforts.map((x) => [x, x])} /></${Field}>
         <${Field} label="Model" id="ai-model" hint=${models ? `${models.length} models available to this key` : "type an id or load the list from the provider"}>
           <div class="row" style="gap:6px"><input id="ai-model" list="ai-models" style="flex:1" value=${v.model} placeholder=${prov === "anthropic" ? "claude-opus-5-5" : "model id"} onInput=${(e) => set({ ...v, model: e.target.value.trim() })} />
             <datalist id="ai-models">${list.map((m) => html`<option value=${m} />`)}</datalist>
             <button class="btn sm" onClick=${loadModels} title="List models from the provider"><${Icon} n="refresh" s=${13} />List</button></div></${Field}>
-        ${prov === "openai" && html`<${Field} label="Base URL" id="ai-base" hint="any OpenAI-compatible server (vLLM, Ollama, Azure…)"><input id="ai-base" value=${v.base_url} placeholder="https://api.openai.com/v1" onInput=${(e) => set({ ...v, base_url: e.target.value.trim() })} /></${Field}>`}
+        ${(prov === "openai" || prov === "anthropic") && html`<${Field} label="Endpoint (base URL)" id="ai-base"
+          hint=${prov === "openai" ? "any OpenAI-compatible server (vLLM, Ollama, Azure…); empty = .env or OpenAI" : "a gateway / proxy speaking the Claude Messages API; empty = .env or api.anthropic.com"}>
+          <input id="ai-base" value=${v.base_url} placeholder=${c.provider === prov ? c.base_url : prov === "openai" ? "https://api.openai.com/v1" : "https://api.anthropic.com"} onInput=${(e) => set({ ...v, base_url: e.target.value.trim() })} /></${Field}>`}
       </div>
       <div class="row wrap" style="gap:8px">
         <button class="btn" disabled=${testing} onClick=${async () => { setTesting(true); setTest(null); try { const r = await api("/admin/ai/llm/test", { method: "POST" }); setTest(r.data); q.reload(); } catch (e) { toast(e.message, "bad"); } setTesting(false); }}>${testing ? "Testing…" : "Test saved setting"}</button>

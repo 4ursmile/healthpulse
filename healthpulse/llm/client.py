@@ -9,6 +9,7 @@ from collections.abc import Iterator
 import httpx
 
 DEFAULT_CLAUDE = "claude-opus-5-5"
+DEFAULT_BASE = {"anthropic": "https://api.anthropic.com", "openai": "https://api.openai.com/v1"}
 
 
 class LLMError(RuntimeError):
@@ -38,7 +39,8 @@ def admin_overrides() -> dict:
 def config() -> dict:
     ov = admin_overrides()
     prov = (ov.get("provider") or os.environ.get("HP_LLM_PROVIDER", "auto")).strip().lower()
-    a_key = os.environ.get("ANTHROPIC_API_KEY", "").strip()
+    # ANTHROPIC_AUTH_TOKEN (sent as a Bearer token) is what most Claude gateways / proxies expect instead of x-api-key
+    a_key = (os.environ.get("ANTHROPIC_API_KEY", "") or os.environ.get("ANTHROPIC_AUTH_TOKEN", "")).strip()
     o_key = os.environ.get("OPENAI_API_KEY", "").strip()
     if prov == "auto":
         prov = "anthropic" if a_key else "openai" if o_key else "none"
@@ -54,10 +56,12 @@ def config() -> dict:
     missing = None if ok else ("HP_LLM_MODEL" if prov == "openai" and o_key and not model else
                                "ANTHROPIC_API_KEY" if prov == "anthropic" else
                                "OPENAI_API_KEY" if prov == "openai" else "ANTHROPIC_API_KEY or OPENAI_API_KEY in .env")
+    env_base = os.environ.get("ANTHROPIC_BASE_URL" if prov == "anthropic" else "OPENAI_BASE_URL", "").strip()
+    base_url = (ov.get("base_url") or env_base or DEFAULT_BASE.get(prov, "")).rstrip("/")
     cooling = bool(_health["error_at"] and time.time() - _health["error_at"] < COOLDOWN_S)
     return {"provider": prov, "model": model or None, "configured": ok and enabled, "enabled": enabled,
             "effort": (ov.get("effort") or os.environ.get("HP_LLM_EFFORT", "medium")).strip().lower(),
-            "base_url": (ov.get("base_url") or os.environ.get("OPENAI_BASE_URL", "https://api.openai.com/v1")).rstrip("/"),
+            "base_url": base_url, "custom_endpoint": base_url != DEFAULT_BASE.get(prov, base_url),
             "keys": {"anthropic": bool(a_key), "openai": bool(o_key)}, "source": "admin" if ov else "env",
             "missing": None if ok else missing, "available": ok and enabled and not cooling,
             "health": dict(_health)}
@@ -68,6 +72,23 @@ def _mark(ok: bool, err: str | None = None):
         _health.update(ok_at=time.time(), error=None, error_at=None)
     else:
         _health.update(error=err, error_at=time.time())
+
+
+def claude_client(c: dict, timeout: float = 180.0, max_retries: int = 2):
+    """Anthropic SDK client pointed at the configured endpoint (api.anthropic.com or a gateway / proxy)."""
+    import anthropic
+    kw = {"max_retries": max_retries, "timeout": timeout}
+    if c.get("custom_endpoint"):
+        kw["base_url"] = c["base_url"]
+    if not os.environ.get("ANTHROPIC_API_KEY", "").strip() and os.environ.get("ANTHROPIC_AUTH_TOKEN", "").strip():
+        kw["auth_token"] = os.environ["ANTHROPIC_AUTH_TOKEN"].strip()
+    return anthropic.Anthropic(**kw)
+
+
+def use_fallback(c: dict) -> bool:
+    """Server-side refusal fallback is a first-party beta; gateways usually reject unknown betas, so skip it there."""
+    return (os.environ.get("HP_LLM_FALLBACK", "1") == "1" and not c.get("custom_endpoint")
+            and c["model"].startswith(("claude-opus-5", "claude-fable-5", "claude-sonnet-5-5")))
 
 
 def stream(system: str, user: str, max_tokens: int = 8000) -> Iterator[str]:
@@ -92,8 +113,7 @@ def list_models() -> list[str]:
     c = config()
     try:
         if c["provider"] == "anthropic" and c["keys"]["anthropic"]:
-            import anthropic
-            return [m.id for m in anthropic.Anthropic(max_retries=0, timeout=10.0).models.list(limit=100)]
+            return [m.id for m in claude_client(c, timeout=10.0, max_retries=0).models.list(limit=100)]
         if c["provider"] == "openai" and c["keys"]["openai"]:
             r = httpx.get(f"{c['base_url']}/models", headers={"Authorization": f"Bearer {os.environ['OPENAI_API_KEY'].strip()}"}, timeout=10)
             r.raise_for_status()
@@ -114,13 +134,12 @@ def test() -> dict:
 
 def _claude(system: str, user: str, c: dict, max_tokens: int) -> Iterator[str]:
     import anthropic
-    client = anthropic.Anthropic(max_retries=2, timeout=180.0)
+    client = claude_client(c)
     kw = dict(model=c["model"], max_tokens=max_tokens, system=system, messages=[{"role": "user", "content": user}])
     if c["effort"] in ("low", "medium", "high", "xhigh", "max"):
         kw["output_config"] = {"effort": c["effort"]}
-    use_fallback = os.environ.get("HP_LLM_FALLBACK", "1") == "1" and c["model"].startswith(("claude-opus-5", "claude-fable-5", "claude-sonnet-5-5"))
     try:
-        if use_fallback:
+        if use_fallback(c):
             # server-side refusal fallback: a declined request is re-run on a fallback model inside the same call
             ctx = client.beta.messages.stream(betas=["server-side-fallback-2026-07-01"], fallbacks="default", **kw)
         else:
@@ -146,7 +165,7 @@ def _claude(system: str, user: str, c: dict, max_tokens: int) -> Iterator[str]:
     except anthropic.APIStatusError as e:
         raise LLMError(f"Claude API error {e.status_code}")
     except anthropic.APIConnectionError:
-        raise LLMError("Claude: network error (is api.anthropic.com reachable?)")
+        raise LLMError(f"Claude: network error (is {c['base_url']} reachable?)")
 
 
 def _openai(system: str, user: str, c: dict, max_tokens: int) -> Iterator[str]:

@@ -168,7 +168,8 @@ Screens: **Viet Nam → Situation map** (`/vn`), **Response simulator** (`/vn/si
   seed. Results are SCENARIO output; every rate is an editable assumption (the sandbox's calibrated values are listed above;
   this Response simulator still uses planner assumptions).
 - **LLM analyst.** Set `ANTHROPIC_API_KEY` (default model `claude-opus-5-5`), or `OPENAI_API_KEY` + `HP_LLM_MODEL`, in
-  `.env` and restart. The analyst streams a brief grounded on the screen's JSON, which can be inspected under
+  `.env` and restart. For a custom endpoint set `ANTHROPIC_BASE_URL` (Claude gateway/proxy, with `ANTHROPIC_AUTH_TOKEN` if
+  it wants a Bearer token) or `OPENAI_BASE_URL` (vLLM, Ollama, Azure…), or set it in Admin → Settings → AI analyst. The analyst streams a brief grounded on the screen's JSON, which can be inspected under
   "context sent". Without a key it gives a rule-based brief.
 
 ## Demo path: the Story screen

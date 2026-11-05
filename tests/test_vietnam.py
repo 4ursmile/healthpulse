@@ -83,6 +83,8 @@ def test_llm_admin_settings_and_fallback(client, tokens, monkeypatch):
     from healthpulse.llm import client as llm
     monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
     monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    for k in ("ANTHROPIC_AUTH_TOKEN", "ANTHROPIC_BASE_URL", "OPENAI_BASE_URL", "HP_LLM_PROVIDER", "HP_LLM_MODEL"):
+        monkeypatch.delenv(k, raising=False)
     assert client.get("/api/v1/admin/ai/llm", headers=tokens["viewer"]).status_code == 403
     r = client.put("/api/v1/admin/ai/llm", json={"provider": "anthropic", "model": "claude-sonnet-5-5", "effort": "high"},
                    headers=tokens["platform_admin"])
@@ -96,3 +98,26 @@ def test_llm_admin_settings_and_fallback(client, tokens, monkeypatch):
     assert not llm.config()["available"]  # admin switch forces the rule-based analyst
     assert "sk-test" not in client.get("/api/v1/admin/ai/llm", headers=tokens["platform_admin"]).text
     assert client.delete("/api/v1/admin/ai/llm", headers=tokens["platform_admin"]).json()["data"]["config"]["source"] == "env"
+
+
+def test_llm_custom_endpoint(client, tokens, monkeypatch):
+    from healthpulse.llm import client as llm
+    monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    for k in ("ANTHROPIC_AUTH_TOKEN", "ANTHROPIC_BASE_URL", "OPENAI_BASE_URL", "HP_LLM_PROVIDER", "HP_LLM_MODEL"):
+        monkeypatch.delenv(k, raising=False)
+    monkeypatch.setenv("ANTHROPIC_AUTH_TOKEN", "gw-token")
+    monkeypatch.setenv("ANTHROPIC_BASE_URL", "https://gw.example.com/")
+    c = llm.config()
+    assert c["provider"] == "anthropic" and c["available"] and c["custom_endpoint"] and c["base_url"] == "https://gw.example.com"
+    assert not llm.use_fallback(c)  # first-party beta not sent through a gateway
+    cl = llm.claude_client(c)
+    assert str(cl.base_url).rstrip("/") == "https://gw.example.com" and cl.auth_token == "gw-token"
+    # admin override wins over .env, and the token never leaks into the settings view
+    r = client.put("/api/v1/admin/ai/llm", json={"provider": "anthropic", "model": "aws/anthropic/claude-opus-5-5",
+                                                  "base_url": "https://proxy.example.org/v1"}, headers=tokens["platform_admin"])
+    assert r.status_code == 200 and r.json()["data"]["config"]["base_url"] == "https://proxy.example.org/v1"
+    assert "gw-token" not in r.text
+    monkeypatch.delenv("ANTHROPIC_BASE_URL")
+    client.delete("/api/v1/admin/ai/llm", headers=tokens["platform_admin"])
+    assert not llm.config()["custom_endpoint"] and llm.use_fallback(llm.config())
