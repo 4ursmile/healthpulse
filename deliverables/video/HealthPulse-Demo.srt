@@ -1,0 +1,211 @@
+1
+00:00:00,500 --> 00:00:00,671
+Hi!
+
+2
+00:00:00,671 --> 00:00:03,530
+We're TerraAegis, a two-person team from Vietnam.
+
+3
+00:00:03,530 --> 00:00:05,069
+And this is HealthPulse
+
+4
+00:00:05,069 --> 00:00:08,710
+a climate-informed early warning and response planning tool.
+
+5
+00:00:08,910 --> 00:00:10,163
+Here's the problem.
+
+6
+00:00:10,163 --> 00:00:12,537
+Climate is shifting when and where disease hits
+
+7
+00:00:12,537 --> 00:00:18,258
+and the ILO estimates 2.4 billion workers face excessive heat at work.
+
+8
+00:00:18,258 --> 00:00:22,904
+Yet most health teams still react after cases are reported.
+
+9
+00:00:22,904 --> 00:00:26,410
+By then, the weeks you needed to prepare are gone.
+
+10
+00:00:26,610 --> 00:00:28,596
+HealthPulse turns public climate
+
+11
+00:00:28,596 --> 00:00:33,951
+disease and population data into forecasts with honest uncertainty ranges
+
+12
+00:00:33,951 --> 00:00:38,016
+compares demand against resources, and, this is key
+
+13
+00:00:38,016 --> 00:00:40,260
+leaves the final decision to a person.
+
+14
+00:00:40,460 --> 00:00:42,341
+Let me show you the working app.
+
+15
+00:00:42,341 --> 00:00:45,222
+First, a hard question: would it have warned us?
+
+16
+00:00:45,222 --> 00:00:49,746
+We replayed Brazil's record 2023–24 dengue season, week by week
+
+17
+00:00:49,746 --> 00:00:52,247
+using only the data available at the time.
+
+18
+00:00:52,247 --> 00:00:56,911
+All 19 epidemic states were warned early, a median of 6 weeks ahead.
+
+19
+00:00:56,911 --> 00:01:00,790
+To be fair, a simple rule gets 4, so the model adds about 2.
+
+20
+00:01:00,990 --> 00:01:02,228
+Here's Minas Gerais.
+
+21
+00:01:02,228 --> 00:01:04,348
+The blue line is our alert, in mid-December.
+
+22
+00:01:04,348 --> 00:01:07,999
+The red line is when threshold monitoring would have seen it, late January.
+
+23
+00:01:07,999 --> 00:01:12,000
+That gap is time to send vector-control teams, and staff up clinics.
+
+24
+00:01:12,200 --> 00:01:16,528
+Next, the 2026–27 season outlook, with its 80% range.
+
+25
+00:01:16,528 --> 00:01:17,431
+Then the brief.
+
+26
+00:01:17,431 --> 00:01:22,231
+Our AI analyst, Claude, writes it live, from exactly these numbers
+
+27
+00:01:22,231 --> 00:01:25,119
+with a rule-based fallback if it's offline.
+
+28
+00:01:25,119 --> 00:01:26,671
+And it can only propose.
+
+29
+00:01:26,671 --> 00:01:31,640
+An epidemiology reviewer approves or rejects, and it's logged for audit.
+
+30
+00:01:31,840 --> 00:01:33,754
+Now, Viet Nam, our home.
+
+31
+00:01:33,754 --> 00:01:35,318
+All 34 new provinces
+
+32
+00:01:35,318 --> 00:01:39,640
+with NASA weather data and a climate-driven dengue model.
+
+33
+00:01:39,640 --> 00:01:43,234
+You can see which provinces are on alert this month, and why.
+
+34
+00:01:43,234 --> 00:01:48,057
+Hà Nội is estimated at about 1.7 times its seasonal norm.
+
+35
+00:01:48,057 --> 00:01:51,740
+And every number is labelled: observed, estimate, or scenario.
+
+36
+00:01:51,940 --> 00:01:57,345
+In the outbreak sandbox, planners seed an outbreak on the real map, press play
+
+37
+00:01:57,345 --> 00:01:59,778
+and test distancing, vaccination or vector control
+
+38
+00:01:59,778 --> 00:02:02,790
+then watch hospital load across 16 trials.
+
+39
+00:02:02,990 --> 00:02:07,534
+And for a real emergency, there's Live response, an incident command room.
+
+40
+00:02:07,534 --> 00:02:12,508
+In this drill, cases are keyed in as they arrive, and clusters appear on the map.
+
+41
+00:02:12,508 --> 00:02:16,755
+The AI analyst uses tools over the live data to recommend next steps
+
+42
+00:02:16,755 --> 00:02:19,625
+and the optimiser proposes where resources go.
+
+43
+00:02:19,625 --> 00:02:21,070
+Again, people approve.
+
+44
+00:02:21,270 --> 00:02:22,591
+So, does it work?
+
+45
+00:02:22,591 --> 00:02:26,070
+On held-out seasons across 26 Brazilian states
+
+46
+00:02:26,070 --> 00:02:30,737
+83% of actual counts fell inside our predicted range
+
+47
+00:02:30,737 --> 00:02:33,340
+versus 75% for the baseline.
+
+48
+00:02:33,340 --> 00:02:38,220
+Better, but still short of our 90% target, and we say so.
+
+49
+00:02:38,420 --> 00:02:43,082
+Next, we want to pilot this with a local health or workplace team in Vietnam
+
+50
+00:02:43,082 --> 00:02:46,714
+then add validated heat exposure inputs for outdoor workers.
+
+51
+00:02:46,714 --> 00:02:49,770
+No wearables, no personal data, just a browser.
+
+52
+00:02:49,770 --> 00:02:52,233
+HealthPulse: from signals to earlier decisions.
+
+53
+00:02:52,233 --> 00:02:53,160
+Thank you!

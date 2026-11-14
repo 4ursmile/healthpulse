@@ -11,3 +11,13 @@ artifacts/
 .DS_Store
 .env.*
 !.env.example
+
+# demo video build outputs (regenerable; large)
+deliverables/video/clips/
+deliverables/video/shots/
+deliverables/video/audio/
+deliverables/video/tools/.venv/
+challenge-demo/.wrangler/
+.wrangler/
+node_modules/
+*.log

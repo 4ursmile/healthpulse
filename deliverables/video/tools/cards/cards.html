@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>HealthPulse cards</title>
+<style>
+@font-face{font-family:Plex;src:url(fonts/ibm-plex-sans-latin-400-normal.woff2) format("woff2");font-weight:400}
+@font-face{font-family:Plex;src:url(fonts/ibm-plex-sans-latin-500-normal.woff2) format("woff2");font-weight:500}
+@font-face{font-family:Plex;src:url(fonts/ibm-plex-sans-latin-600-normal.woff2) format("woff2");font-weight:600}
+@font-face{font-family:PlexMono;src:url(fonts/ibm-plex-mono-latin-500-normal.woff2) format("woff2");font-weight:500}
+:root{--teal:#12696a;--teal2:#1b8a87;--ink:#16303a;--muted:#5b6b70;--sand:#e7e1d7;--cream:#f5f2ec;--mint:#e3eeeb;--amber:#c98a3a;--line:#d8d2c6;--red:#c4473a}
+*{box-sizing:border-box;margin:0}
+html,body{width:1920px;height:1080px;overflow:hidden;background:var(--cream);font-family:Plex,system-ui,sans-serif;color:var(--ink)}
+.card{position:absolute;inset:0;display:none;padding:120px 150px}
+.card.on{display:block}
+/* soft moving backdrop */
+.bg{position:absolute;inset:-10%;background:
+  radial-gradient(900px 600px at 80% 20%,rgba(18,105,106,.10),transparent 60%),
+  radial-gradient(800px 700px at 10% 90%,rgba(201,138,58,.08),transparent 60%);animation:drift 30s ease-in-out infinite alternate}
+@keyframes drift{to{transform:translate(-3%,2%) scale(1.05)}}
+.dots{position:absolute;right:-120px;top:-80px;width:900px;height:900px;opacity:.35;
+  background-image:radial-gradient(circle,#b9b1a3 2.2px,transparent 2.6px);background-size:26px 26px;
+  -webkit-mask-image:radial-gradient(closest-side,#000 30%,transparent 75%);animation:spin 80s linear infinite}
+@keyframes spin{to{transform:rotate(25deg)}}
+.up{opacity:0;transform:translateY(28px);animation:up .9s cubic-bezier(.2,.7,.2,1) forwards}
+@keyframes up{to{opacity:1;transform:none}}
+.fade{opacity:0;animation:fade 1s ease forwards}
+@keyframes fade{to{opacity:1}}
+.kicker{font:500 26px/1 PlexMono,monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--teal)}
+h1{font-weight:600;font-size:132px;line-height:1;letter-spacing:-.03em}
+h2{font-weight:600;font-size:76px;line-height:1.05;letter-spacing:-.02em}
+.sub{font-size:40px;line-height:1.35;color:var(--muted);font-weight:400}
+.foot{position:absolute;left:150px;right:150px;top:56px;font-size:21px;color:var(--muted);display:flex;justify-content:space-between}
+.band{position:absolute;left:0;right:0;bottom:0;height:14px;background:#86705f}
+.band i{position:absolute;left:0;top:0;bottom:0;background:var(--teal);width:0;animation:grow 2.2s .3s cubic-bezier(.3,.7,.2,1) forwards}
+@keyframes grow{to{width:100%}}
+/* intro */
+.logo{display:flex;align-items:center;gap:26px}
+.mark{width:96px;height:96px;border-radius:24px;background:var(--teal);display:grid;place-items:center;box-shadow:0 18px 40px rgba(18,105,106,.25)}
+.pulse path{stroke-dasharray:120;stroke-dashoffset:120;animation:draw 1.6s .4s ease forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.ekg{position:absolute;left:0;right:0;top:560px;height:180px;opacity:.9}
+.ekg path{stroke-dasharray:3000;stroke-dashoffset:3000;animation:draw2 4s 1s ease-in-out forwards}
+@keyframes draw2{to{stroke-dashoffset:0}}
+.team{display:flex;gap:70px;font-size:30px}
+.team b{display:block;font-weight:600;font-size:34px;color:var(--ink)}
+.team span{color:var(--muted)}
+/* problem */
+.big{white-space:nowrap;font-weight:600;font-size:190px;letter-spacing:-.04em;line-height:.9;color:var(--teal)}
+.bar{height:76px;background:#d6e3df;border-radius:10px;overflow:hidden;position:relative;box-shadow:0 10px 30px rgba(0,0,0,.06)}
+.bar i{position:absolute;left:0;top:0;bottom:0;background:var(--teal);width:0;animation:to70 2.4s 1s cubic-bezier(.3,.7,.2,1) forwards}
+@keyframes to70{to{width:70.6%}}
+.react{display:flex;align-items:center;gap:28px;font-size:34px;margin-top:60px}
+.chipx{padding:16px 26px;border-radius:14px;background:#fff;border:1px solid var(--line);font-weight:500}
+.chipx.red{background:#fbeae7;border-color:#efc2bb;color:#8e2f25}
+.arrow{font-size:44px;color:var(--muted)}
+/* how */
+.flow{display:flex;gap:28px;align-items:stretch;margin-top:90px}
+.step{flex:1;background:var(--mint);border-radius:18px;padding:44px 40px;min-height:330px;box-shadow:0 14px 36px rgba(0,0,0,.06)}
+.step .n{font:500 22px PlexMono,monospace;color:var(--teal);letter-spacing:.1em}
+.step h3{font-size:46px;font-weight:600;margin:18px 0 22px;color:var(--teal)}
+.step p{font-size:32px;line-height:1.35}
+.step.last{background:var(--teal);color:#fff}
+.step.last h3,.step.last .n{color:#fff}
+.flow .ar{align-self:center;font-size:56px;color:var(--teal)}
+/* evidence */
+.ev{display:grid;grid-template-columns:1.25fr 1fr;gap:90px;margin-top:60px}
+.row2{display:grid;grid-template-columns:300px 1fr;align-items:center;gap:30px;margin:34px 0;font-size:34px}
+.hb{height:70px;border-radius:8px;position:relative;width:0}
+.hb span{position:absolute;right:20px;top:50%;transform:translateY(-50%);color:#fff;font-weight:600;font-size:34px}
+.hb.base{background:#86ada3;animation:w75 1.6s .8s cubic-bezier(.3,.7,.2,1) forwards}
+.hb.hp{background:var(--teal);animation:w83 1.8s 1.4s cubic-bezier(.3,.7,.2,1) forwards}
+@keyframes w75{to{width:75%}} @keyframes w83{to{width:83%}}
+.target{position:absolute;top:-14px;bottom:-14px;left:90%;width:4px;background:var(--amber)}
+.target b{position:absolute;top:100%;left:50%;transform:translateX(-50%);white-space:nowrap;color:var(--amber);font-size:26px;margin-top:10px}
+.tile{background:#fff;border:1px solid var(--line);border-radius:18px;padding:24px 36px;margin-bottom:20px;box-shadow:0 10px 30px rgba(0,0,0,.05)}
+.tile .v{font-size:66px;font-weight:600;color:var(--teal);letter-spacing:-.02em;line-height:1}
+.tile .l{font-size:25px;color:var(--muted);margin-top:12px}
+/* vision */
+.cols{display:grid;grid-template-columns:repeat(3,1fr);gap:46px;margin-top:80px}
+.col{border-top:14px solid var(--teal);padding-top:36px}
+.col h3{font-size:52px;font-weight:600;color:var(--teal);margin-bottom:22px}
+.col p{font-size:34px;line-height:1.38}
+.end{position:absolute;inset:0;background:var(--ink);color:#fff;display:flex;flex-direction:column;justify-content:center;padding:0 150px;opacity:0}
+.end h1{color:#fff}
+.end .sub{color:#b9c9cc}
+.pill{display:inline-flex;gap:14px;align-items:center;padding:14px 24px;border-radius:999px;border:1px solid rgba(255,255,255,.25);font-size:26px;color:#d6e3e4}
+</style>
+</head>
+<body>
+<div class="bg"></div><div class="dots"></div>
+
+<!-- INTRO -->
+<section class="card" id="intro">
+  <div class="logo up" style="animation-delay:.2s">
+    <div class="mark"><svg class="pulse" width="62" height="62" viewBox="0 0 24 24"><path d="M3 13h3.4l1.9-5.2 3.1 9.4 2.3-6.2 1.3 2H21" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div class="kicker" style="font-size:30px">TerraAegis presents</div>
+  </div>
+  <h1 class="up" style="margin-top:56px;animation-delay:.5s">HealthPulse</h1>
+  <p class="sub up" style="margin-top:30px;max-width:1300px;animation-delay:.8s">Climate-informed early warning and response planning — from public data to a human decision.</p>
+  <svg class="ekg" viewBox="0 0 1920 180" preserveAspectRatio="none"><path d="M0 120 H520 l40 -70 40 120 40 -110 30 60 H980 l30 -40 26 70 30 -60 H1920" fill="none" stroke="#12696a" stroke-opacity=".35" stroke-width="4" stroke-linejoin="round"/></svg>
+  <div class="team up" style="position:absolute;left:150px;bottom:150px;animation-delay:1.6s">
+    <div><b>Hoang Bao Ly Tran</b><span>Team captain · data science, modelling & AI</span></div>
+    <div><b>Thanh Minh Lê</b><span>Backend services</span></div>
+  </div>
+  <div class="foot fade" style="animation-delay:2.2s"><span>Future Health Digital Innovation Challenge · Climate-Resilient Worker Health</span><span>Vietnam · Prototype</span></div>
+  <div class="band"><i></i></div>
+</section>
+
+<!-- PROBLEM -->
+<section class="card" id="problem">
+  <div class="kicker up">01 · The problem</div>
+  <div style="display:grid;grid-template-columns:1.1fr 1fr;gap:90px;margin-top:70px;align-items:end">
+    <div>
+      <div class="big up" style="animation-delay:.3s"><span id="cnt">0.0</span> billion</div>
+      <p class="sub up" style="margin-top:26px;font-size:44px;color:var(--ink);animation-delay:.5s">workers exposed to excessive heat at work</p>
+    </div>
+    <div class="up" style="animation-delay:.8s">
+      <div class="bar"><i></i></div>
+      <p style="font-size:32px;margin-top:22px"><b style="color:var(--teal)">2.4 billion</b> of 3.4 billion workers worldwide</p>
+    </div>
+  </div>
+  <div class="react up" style="animation-delay:5.5s">
+    <span class="chipx">Climate shifts disease risk</span><span class="arrow">→</span>
+    <span class="chipx">Cases get reported</span><span class="arrow">→</span>
+    <span class="chipx red">Teams react — preparation weeks already lost</span>
+  </div>
+  <div class="foot fade" style="animation-delay:1.5s"><span>[1] ILO (2024), 2020 estimates. [2] WHO/WMO (2025) heat guidance.</span><span>Worker-health extension: proposed, not yet validated</span></div>
+</section>
+
+<!-- HOW -->
+<section class="card" id="how">
+  <div class="kicker up">02 · How HealthPulse works</div>
+  <h2 class="up" style="margin-top:30px;animation-delay:.2s">Data → prediction → response options → human decision</h2>
+  <div class="flow">
+    <div class="step up" style="animation-delay:.9s"><div class="n">01</div><h3>Data</h3><p>Public climate, disease and population data</p></div>
+    <div class="ar fade" style="animation-delay:1.6s">→</div>
+    <div class="step up" style="animation-delay:2.0s"><div class="n">02</div><h3>Forecast</h3><p>Predictions with honest uncertainty ranges</p></div>
+    <div class="ar fade" style="animation-delay:3.4s">→</div>
+    <div class="step up" style="animation-delay:3.8s"><div class="n">03</div><h3>Compare</h3><p>Expected demand against available resources</p></div>
+    <div class="ar fade" style="animation-delay:5.6s">→</div>
+    <div class="step last up" style="animation-delay:6.0s"><div class="n">04</div><h3>Review</h3><p>A person chooses the action — audited</p></div>
+  </div>
+  <div class="foot fade" style="animation-delay:1s"><span>Runs in a browser · Python service · no wearables or sensors</span><span>AI is optional — rule-based fallback everywhere</span></div>
+</section>
+
+<!-- EVIDENCE -->
+<section class="card" id="evidence">
+  <div class="kicker up">09 · How we check the forecasts</div>
+  <h2 class="up" style="margin-top:30px;animation-delay:.2s">Did actual cases fall inside the predicted range?</h2>
+  <div class="ev">
+    <div style="padding-top:20px">
+      <div class="row2 up" style="animation-delay:.5s"><span>Historical baseline</span><div style="position:relative"><div class="hb base"><span>75%</span></div></div></div>
+      <div class="row2 up" style="animation-delay:.9s"><span><b>HealthPulse</b></span><div style="position:relative"><div class="hb hp"><span>83%</span></div><div class="target fade" style="animation-delay:3s"><b>90% target</b></div></div></div>
+      <p class="sub up" style="margin-top:70px;font-size:32px;animation-delay:6s">Better than the baseline — <b style="color:var(--ink)">still short of the 90% target.</b> We report it as it is.</p>
+    </div>
+    <div>
+      <div class="tile up" style="animation-delay:1.8s"><div class="v">26</div><div class="l">Brazilian states · 4 held-out seasons, 2022–2026</div></div>
+      <div class="tile up" style="animation-delay:2.4s"><div class="v">19 / 19</div><div class="l">epidemic states warned early in the 2023–24 replay</div></div>
+      <div class="tile up" style="animation-delay:3.0s"><div class="v">6 wk</div><div class="l">median lead · a simple projection gets 4</div></div>
+    </div>
+  </div>
+  <div class="foot fade" style="animation-delay:1s"><span>[6] Internal evaluation: coverage 74.80% vs 83.23%. Replay on final-vintage data, 2-week reporting lag. Not a prospective trial.</span></div>
+</section>
+
+<!-- VISION -->
+<section class="card" id="vision">
+  <div class="kicker up">10 · What's next</div>
+  <h2 class="up" style="margin-top:30px;animation-delay:.2s">Earlier preparation for health pressures</h2>
+  <div class="cols">
+    <div class="col up" style="animation-delay:.8s"><h3>Today</h3><p>Dengue data, forecast evaluation, maps and outbreak simulations — working.</p></div>
+    <div class="col up" style="animation-delay:1.8s"><h3>Next</h3><p>Pilot the workflow with a local health or workplace team in Vietnam.</p></div>
+    <div class="col up" style="animation-delay:4.2s"><h3>Longer term</h3><p>Add validated heat-exposure inputs for outdoor workers; measure whether decisions improve.</p></div>
+  </div>
+  <div class="foot fade" style="animation-delay:1s"><span>Proposed roadmap — not a committed partnership or validated health benefit.</span><span>No individual worker data is used.</span></div>
+  <div class="end" id="endslate">
+    <div class="logo"><div class="mark"><svg width="62" height="62" viewBox="0 0 24 24"><path d="M3 13h3.4l1.9-5.2 3.1 9.4 2.3-6.2 1.3 2H21" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="kicker" style="color:#8fd0cc;font-size:30px">TerraAegis</div></div>
+    <h1 style="margin-top:50px">HealthPulse</h1>
+    <p class="sub" style="margin-top:26px;font-size:46px">From signals to earlier decisions.</p>
+    <div style="display:flex;gap:18px;margin-top:70px;flex-wrap:wrap">
+      <span class="pill">Hoang Bao Ly Tran · Thanh Minh Lê</span>
+      <span class="pill">Working prototype · live preview & evidence archive in the submission</span>
+    </div>
+  </div>
+</section>
+
+<script>
+const q = new URLSearchParams(location.search);
+const id = q.get("card") || "intro";
+document.getElementById(id).classList.add("on");
+if (id === "problem") {
+  const el = document.getElementById("cnt"), t0 = performance.now() + 500;
+  const tick = (t) => { const p = Math.min(1, Math.max(0, (t - t0) / 2200)); el.textContent = (2.4 * (1 - Math.pow(1 - p, 3))).toFixed(1); if (p < 1) requestAnimationFrame(tick); };
+  requestAnimationFrame(tick);
+}
+if (id === "vision") {
+  const at = +(q.get("end") || 9); // seconds until the end slate fades in
+  const e = document.getElementById("endslate");
+  e.style.transition = "opacity 1.2s ease"; setTimeout(() => (e.style.opacity = 1), at * 1000);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+TerraAegis HealthPulse submission
+
+Use TerraAegis-HealthPulse-Submission.pptx for the editable deck.
+Use Submission-Answers.md for the application form.
+Sources.txt contains full citations and SHA-256 hashes for the aggregate Evidence files.
+
+The prototype link is a FREE temporary Cloudflare tunnel to the running application. The computer and tunnel must remain running; the URL can change. No paid Cloudflare resources or LLM credentials are used in this preview. Protected actions require authentication. Streaming features are limited by Quick Tunnels.
+
+Team: Hoang Bao Ly Tran, age23, team captain/data science/modelling/AI. Thanh Minh Lê, age23, backend services. Both based in Vietnam. Team declares no relationships with organizers, partners or judges.
+
+All internal evaluation results are identified as internal. No worker-heat model or health outcome has been prospectively validated.

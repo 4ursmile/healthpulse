@@ -1,0 +1,488 @@
+{
+ "generated_at": "2026-11-04T15:06:41+00:00",
+ "question": "In the record 2023-24 dengue season, how many weeks before threshold monitoring would HealthPulse have warned each state that it was heading past the epidemic level?",
+ "definitions": {
+  "event": "cumulative season incidence > 300 probable cases / 100k (MoH epidemic level)",
+  "delay_weeks": 2,
+  "horizon_weeks": 4,
+  "status_quo": "the crossing is seen when its week's data arrives (crossing week + delay)",
+  "healthpulse": "damped log-linear growth of the last 3 visible weeks, projected over the unseen weeks + horizon; alert when projected cumulative incidence > threshold",
+  "lead_weeks": "status-quo detection week - HealthPulse alert week",
+  "flat_comparator": "same rule, but the last visible week is carried forward flat (no growth model)"
+ },
+ "season_2023_24": {
+  "state_seasons": 26,
+  "epidemic": 19,
+  "detected_before_status_quo": 19,
+  "missed": 0,
+  "lead_weeks_median": 6.0,
+  "lead_weeks_mean": 7.315789473684211,
+  "false_alarms": 1,
+  "non_epidemic": 7,
+  "false_alarm_rate": 0.14285714285714285,
+  "alerts_more_than_8_weeks_early": 5,
+  "lead_weeks_median_crossed_before_peak": 5.0,
+  "crossed_before_peak": 13,
+  "flat_comparator": {
+   "lead_weeks_median": 4.0,
+   "lead_weeks_median_crossed_before_peak": 3.0,
+   "missed": 0,
+   "false_alarms": 0
+  }
+ },
+ "history_2015_2022": {
+  "state_seasons": 208,
+  "epidemic": 85,
+  "detected_before_status_quo": 85,
+  "missed": 0,
+  "lead_weeks_median": 7.0,
+  "lead_weeks_mean": 7.7176470588235295,
+  "false_alarms": 9,
+  "non_epidemic": 123,
+  "false_alarm_rate": 0.07317073170731707,
+  "alerts_more_than_8_weeks_early": 24,
+  "lead_weeks_median_crossed_before_peak": 6.0,
+  "crossed_before_peak": 51,
+  "flat_comparator": {
+   "lead_weeks_median": 4.0,
+   "lead_weeks_median_crossed_before_peak": 4.0,
+   "missed": 0,
+   "false_alarms": 1
+  }
+ },
+ "states_2023_24": [
+  {
+   "uf": "AC",
+   "incidence": 1106.0251115393394,
+   "crossing_date": "2023-12-10",
+   "seen_by_status_quo": "2023-12-24",
+   "alert_date": "2023-11-19",
+   "lead_weeks": 5,
+   "lead_weeks_flat": 3,
+   "peak_date": "2023-12-10"
+  },
+  {
+   "uf": "DF",
+   "incidence": 9844.013278718312,
+   "crossing_date": "2023-12-17",
+   "seen_by_status_quo": "2023-12-31",
+   "alert_date": "2023-12-03",
+   "lead_weeks": 4,
+   "lead_weeks_flat": 4,
+   "peak_date": "2024-02-18"
+  },
+  {
+   "uf": "MG",
+   "incidence": 8350.446948745823,
+   "crossing_date": "2024-01-07",
+   "seen_by_status_quo": "2024-01-21",
+   "alert_date": "2023-12-10",
+   "lead_weeks": 6,
+   "lead_weeks_flat": 4,
+   "peak_date": "2024-03-17"
+  },
+  {
+   "uf": "GO",
+   "incidence": 4905.133444972255,
+   "crossing_date": "2024-01-14",
+   "seen_by_status_quo": "2024-01-28",
+   "alert_date": "2024-01-14",
+   "lead_weeks": 2,
+   "lead_weeks_flat": 2,
+   "peak_date": "2024-03-10"
+  },
+  {
+   "uf": "PR",
+   "incidence": 5691.476249010014,
+   "crossing_date": "2024-01-14",
+   "seen_by_status_quo": "2024-01-28",
+   "alert_date": "2023-12-24",
+   "lead_weeks": 5,
+   "lead_weeks_flat": 2,
+   "peak_date": "2024-03-31"
+  },
+  {
+   "uf": "RJ",
+   "incidence": 1865.8826334683708,
+   "crossing_date": "2024-02-04",
+   "seen_by_status_quo": "2024-02-18",
+   "alert_date": "2024-01-14",
+   "lead_weeks": 5,
+   "lead_weeks_flat": 4,
+   "peak_date": "2024-02-18"
+  },
+  {
+   "uf": "AP",
+   "incidence": 1380.230358092614,
+   "crossing_date": "2024-02-11",
+   "seen_by_status_quo": "2024-02-25",
+   "alert_date": "2024-01-14",
+   "lead_weeks": 6,
+   "lead_weeks_flat": 2,
+   "peak_date": "2024-02-25"
+  },
+  {
+   "uf": "SC",
+   "incidence": 4559.9390750642715,
+   "crossing_date": "2024-02-11",
+   "seen_by_status_quo": "2024-02-25",
+   "alert_date": "2024-02-04",
+   "lead_weeks": 3,
+   "lead_weeks_flat": 2,
+   "peak_date": "2024-04-07"
+  },
+  {
+   "uf": "SP",
+   "incidence": 4777.423121830518,
+   "crossing_date": "2024-02-11",
+   "seen_by_status_quo": "2024-02-25",
+   "alert_date": "2024-01-14",
+   "lead_weeks": 6,
+   "lead_weeks_flat": 3,
+   "peak_date": "2024-05-05"
+  },
+  {
+   "uf": "MT",
+   "incidence": 1117.1413609481183,
+   "crossing_date": "2024-02-18",
+   "seen_by_status_quo": "2024-03-03",
+   "alert_date": "2024-01-14",
+   "lead_weeks": 7,
+   "lead_weeks_flat": 4,
+   "peak_date": "2024-04-28"
+  },
+  {
+   "uf": "BA",
+   "incidence": 1612.604224513995,
+   "crossing_date": "2024-02-25",
+   "seen_by_status_quo": "2024-03-10",
+   "alert_date": "2024-02-11",
+   "lead_weeks": 4,
+   "lead_weeks_flat": 2,
+   "peak_date": "2024-03-31"
+  },
+  {
+   "uf": "RS",
+   "incidence": 1983.2029004671897,
+   "crossing_date": "2024-03-03",
+   "seen_by_status_quo": "2024-03-17",
+   "alert_date": "2024-02-18",
+   "lead_weeks": 4,
+   "lead_weeks_flat": 3,
+   "peak_date": "2024-04-14"
+  },
+  {
+   "uf": "MS",
+   "incidence": 675.1105742971404,
+   "crossing_date": "2024-03-17",
+   "seen_by_status_quo": "2024-03-31",
+   "alert_date": "2024-01-21",
+   "lead_weeks": 10,
+   "lead_weeks_flat": 5,
+   "peak_date": "2024-03-10"
+  },
+  {
+   "uf": "RN",
+   "incidence": 521.6955773691255,
+   "crossing_date": "2024-04-07",
+   "seen_by_status_quo": "2024-04-21",
+   "alert_date": "2024-03-03",
+   "lead_weeks": 7,
+   "lead_weeks_flat": 5,
+   "peak_date": "2024-03-10"
+  },
+  {
+   "uf": "PI",
+   "incidence": 440.0342926953834,
+   "crossing_date": "2024-05-05",
+   "seen_by_status_quo": "2024-05-19",
+   "alert_date": "2024-03-03",
+   "lead_weeks": 11,
+   "lead_weeks_flat": 7,
+   "peak_date": "2024-03-10"
+  },
+  {
+   "uf": "AL",
+   "incidence": 579.701773607312,
+   "crossing_date": "2024-05-26",
+   "seen_by_status_quo": "2024-06-09",
+   "alert_date": "2024-03-03",
+   "lead_weeks": 14,
+   "lead_weeks_flat": 6,
+   "peak_date": "2024-07-07"
+  },
+  {
+   "uf": "TO",
+   "incidence": 328.27376688124707,
+   "crossing_date": "2024-05-26",
+   "seen_by_status_quo": "2024-06-09",
+   "alert_date": "2024-04-21",
+   "lead_weeks": 7,
+   "lead_weeks_flat": 7,
+   "peak_date": "2024-04-14"
+  },
+  {
+   "uf": "RO",
+   "incidence": 319.71788318471766,
+   "crossing_date": "2024-06-02",
+   "seen_by_status_quo": "2024-06-16",
+   "alert_date": "2024-03-03",
+   "lead_weeks": 15,
+   "lead_weeks_flat": 15,
+   "peak_date": "2024-03-03"
+  },
+  {
+   "uf": "PB",
+   "incidence": 358.50076235693746,
+   "crossing_date": "2024-06-23",
+   "seen_by_status_quo": "2024-07-07",
+   "alert_date": "2024-03-03",
+   "lead_weeks": 18,
+   "lead_weeks_flat": 14,
+   "peak_date": "2024-03-17"
+  },
+  {
+   "uf": "AM",
+   "incidence": 236.03145746914012,
+   "crossing_date": null,
+   "seen_by_status_quo": null,
+   "alert_date": null,
+   "lead_weeks": null,
+   "lead_weeks_flat": null,
+   "peak_date": "2024-01-14"
+  },
+  {
+   "uf": "CE",
+   "incidence": 145.21875192231548,
+   "crossing_date": null,
+   "seen_by_status_quo": null,
+   "alert_date": null,
+   "lead_weeks": null,
+   "lead_weeks_flat": null,
+   "peak_date": "2024-04-07"
+  },
+  {
+   "uf": "MA",
+   "incidence": 153.9304175177151,
+   "crossing_date": null,
+   "seen_by_status_quo": null,
+   "alert_date": null,
+   "lead_weeks": null,
+   "lead_weeks_flat": null,
+   "peak_date": "2024-03-17"
+  },
+  {
+   "uf": "PA",
+   "incidence": 232.12476567655852,
+   "crossing_date": null,
+   "seen_by_status_quo": null,
+   "alert_date": null,
+   "lead_weeks": null,
+   "lead_weeks_flat": null,
+   "peak_date": "2024-02-25"
+  },
+  {
+   "uf": "PE",
+   "incidence": 284.34759973997353,
+   "crossing_date": null,
+   "seen_by_status_quo": null,
+   "alert_date": "2024-03-03",
+   "lead_weeks": null,
+   "lead_weeks_flat": null,
+   "peak_date": "2024-03-31"
+  },
+  {
+   "uf": "RR",
+   "incidence": 91.23973029870548,
+   "crossing_date": null,
+   "seen_by_status_quo": null,
+   "alert_date": null,
+   "lead_weeks": null,
+   "lead_weeks_flat": null,
+   "peak_date": "2024-06-09"
+  },
+  {
+   "uf": "SE",
+   "incidence": 126.97085257282927,
+   "crossing_date": null,
+   "seen_by_status_quo": null,
+   "alert_date": null,
+   "lead_weeks": null,
+   "lead_weeks_flat": null,
+   "peak_date": "2024-03-31"
+  }
+ ],
+ "june_outlook": {
+  "made_at": "EW25 2023 (June)",
+  "states_forecast_above_normal": 17,
+  "states_observed_above_normal": 24,
+  "both": 17,
+  "national_forecast_total": 902113.8158134164,
+  "national_climatology_total": 534948.7442606172,
+  "national_observed_total": 6700498.000000001,
+  "states": [
+   {
+    "uf": "AC",
+    "forecast_total": 5540.352233936039,
+    "climatology_total": 4006.8394764555055,
+    "observed_total": 9740.0
+   },
+   {
+    "uf": "AL",
+    "forecast_total": 7470.222314844268,
+    "climatology_total": 10568.822810563022,
+    "observed_total": 18666.999999999996
+   },
+   {
+    "uf": "AM",
+    "forecast_total": 5135.343581898117,
+    "climatology_total": 4938.066673302887,
+    "observed_total": 10104.999999999998
+   },
+   {
+    "uf": "AP",
+    "forecast_total": 705.2124909953437,
+    "climatology_total": 690.6660788843664,
+    "observed_total": 11081.0
+   },
+   {
+    "uf": "BA",
+    "forecast_total": 52341.30448646608,
+    "climatology_total": 35265.73521217978,
+    "observed_total": 239480.0
+   },
+   {
+    "uf": "CE",
+    "forecast_total": 24736.73159199302,
+    "climatology_total": 29619.362359480852,
+    "observed_total": 13408.999999999998
+   },
+   {
+    "uf": "DF",
+    "forecast_total": 17404.964002014713,
+    "climatology_total": 12351.291265868873,
+    "observed_total": 293628.99999999994
+   },
+   {
+    "uf": "GO",
+    "forecast_total": 80775.22399548702,
+    "climatology_total": 82478.40177872972,
+    "observed_total": 360551.0
+   },
+   {
+    "uf": "MA",
+    "forecast_total": 3730.1124460438864,
+    "climatology_total": 4611.538425393572,
+    "observed_total": 10792.0
+   },
+   {
+    "uf": "MG",
+    "forecast_total": 121517.66713677284,
+    "climatology_total": 61273.99093025716,
+    "observed_total": 1780540.0000000002
+   },
+   {
+    "uf": "MS",
+    "forecast_total": 30647.742519510295,
+    "climatology_total": 11336.956274795535,
+    "observed_total": 19591.000000000004
+   },
+   {
+    "uf": "MT",
+    "forecast_total": 25471.076995224816,
+    "climatology_total": 13778.784493343112,
+    "observed_total": 42858.0
+   },
+   {
+    "uf": "PA",
+    "forecast_total": 6460.345472343137,
+    "climatology_total": 5937.280459204049,
+    "observed_total": 20112.0
+   },
+   {
+    "uf": "PB",
+    "forecast_total": 8068.014204243335,
+    "climatology_total": 10799.995725178976,
+    "observed_total": 14860.0
+   },
+   {
+    "uf": "PE",
+    "forecast_total": 8968.002683066517,
+    "climatology_total": 15116.565555046433,
+    "observed_total": 27124.0
+   },
+   {
+    "uf": "PI",
+    "forecast_total": 5991.119113266547,
+    "climatology_total": 5945.228521635233,
+    "observed_total": 14854.000000000002
+   },
+   {
+    "uf": "PR",
+    "forecast_total": 152179.03825459373,
+    "climatology_total": 30716.430061317304,
+    "observed_total": 672997.9999999999
+   },
+   {
+    "uf": "RJ",
+    "forecast_total": 31178.55349716717,
+    "climatology_total": 21113.31814406083,
+    "observed_total": 321299.00000000006
+   },
+   {
+    "uf": "RN",
+    "forecast_total": 11115.48180652594,
+    "climatology_total": 17007.157334796702,
+    "observed_total": 17977.999999999996
+   },
+   {
+    "uf": "RO",
+    "forecast_total": 3221.333588948263,
+    "climatology_total": 2484.402724464802,
+    "observed_total": 5583.0
+   },
+   {
+    "uf": "RR",
+    "forecast_total": 293.2018556581573,
+    "climatology_total": 491.6524623169247,
+    "observed_total": 654.0
+   },
+   {
+    "uf": "RS",
+    "forecast_total": 9700.409883222856,
+    "climatology_total": 614.8294753917683,
+    "observed_total": 222712.0
+   },
+   {
+    "uf": "SC",
+    "forecast_total": 11904.806609033214,
+    "climatology_total": 633.7014427341696,
+    "observed_total": 367460.0
+   },
+   {
+    "uf": "SE",
+    "forecast_total": 2082.1549274207546,
+    "climatology_total": 1628.3028882402982,
+    "observed_total": 2909.0
+   },
+   {
+    "uf": "SP",
+    "forecast_total": 269829.1096959212,
+    "climatology_total": 144997.7413408411,
+    "observed_total": 2196334.0000000005
+   },
+   {
+    "uf": "TO",
+    "forecast_total": 5646.2904268191105,
+    "climatology_total": 6541.682346134209,
+    "observed_total": 5178.0
+   }
+  ]
+ },
+ "caveats": [
+  "Final-vintage counts replayed with a fixed reporting delay; real-time counts are lower and revised (PIT_UNVERIFIED).",
+  "The event is the incidence threshold, not an official emergency decree; decree dates were not used.",
+  "The alert rule was not tuned on 2023-24; the same rule and settings are replayed over 2015-2022 for false alarms.",
+  "A projection crossing the threshold is a warning for planners, not a forecast of hospital load."
+ ]
+}

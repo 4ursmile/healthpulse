@@ -6,6 +6,16 @@ Studio for a Brazil municipal pilot. Specification: [`docs/spec/`](docs/spec/).
 Everything on screen is backed by an API call against loaded records. Each number says whether it is **observed**,
 **forecast**, **scenario** or **synthetic**, with its period, unit and source.
 
+> **Future Health Digital Innovation Challenge: TerraAegis submission** (Climate-Resilient Worker Health)
+>
+> - Demo video (2:55, narrated): [`deliverables/video/HealthPulse-Demo.mp4`](deliverables/video/HealthPulse-Demo.mp4), also
+>   [without captions](deliverables/video/HealthPulse-Demo-no-captions.mp4), with [captions as SRT](deliverables/video/HealthPulse-Demo.srt)
+> - Deck, form answers, sources and evidence: [`deliverables/submission/`](deliverables/submission/)
+> - Team: Hoang Bao Ly Tran (captain; data science, modelling and AI) and Thanh Minh Lê (backend services), Vietnam
+>
+> The worker-heat extension is a proposal. No worker heat-risk model has been validated. See [Demo video](#demo-video) and
+> [Sharing a public preview safely](#sharing-a-public-preview-safely).
+
 ## Quick start
 
 ```bash
@@ -186,6 +196,59 @@ The app opens on **Story** (`/story`), which walks one flow end to end on the of
 Prepare it once with `hp sprint && hp retro` (about 30 s). To have Claude write the brief, set `ANTHROPIC_API_KEY` in `.env`
 (the default model is `claude-opus-5-5`; Admin → Settings → AI analyst can switch it). Without a key everything still works with
 the rule-based brief.
+
+## Demo video
+
+[`deliverables/video/HealthPulse-Demo.mp4`](deliverables/video/HealthPulse-Demo.mp4) runs 2:55 at 1080p30, with a narrated
+voice-over and burned-in captions. Apart from the title and evidence cards, every frame is a screen recording of the running app:
+
+| Time | Scene |
+|---|---|
+| 0:00 | Intro, the problem (ILO: 2.4 of 3.4 billion workers exposed to excessive heat) and how HealthPulse works |
+| 0:40 | Story: "Would it have warned us?" (19/19 epidemic states warned early, median 6 weeks; a flat rule gets 4) |
+| 1:01 | Replay 2023-24 for Minas Gerais: the alert week vs the week threshold monitoring would have seen it |
+| 1:12 | 2026-27 outlook, then Claude **writes the brief live**, and an epidemiology reviewer approves it (audited) |
+| 1:32 | Viet Nam: 34 provinces, alerts and observed/estimate/scenario labels |
+| 1:52 | Outbreak sandbox: seed, play, interventions, hospital load across 16 trials |
+| 2:03 | Live response drill: the **tool-using AI analyst**, optimiser routes and the human "Approve for dispatch" |
+| 2:21 | Evidence: 83% vs 75% interval coverage, still short of the 90% target, then the roadmap |
+
+The video is rebuilt from code in [`deliverables/video/tools/`](deliverables/video/tools/):
+
+1. `script.py` holds the narration per scene. Captions are derived from it, with spoken fillers removed.
+2. The voice is Qwen3-TTS (speaker Aiden). `fetch_tts.py JOB OUTDIR MCP_URL` downloads a finished job, reading the token
+   from `$TTS_TOKEN` only, so it is never written to disk.
+3. `prep_audio.py` caps pauses at 0.46 s, normalises loudness to −16 LUFS and time-stretches to 175 s.
+4. `record.py` records each scene with a Chrome DevTools screencast against a **private copy** of the app
+   (`HP_DB` = a copy of the database, port 18890). `overlay.js` injects the cursor, highlight rings and smooth scrolling.
+5. `assemble.py` adds crossfades, lower-third captions rendered by Chrome and the SRT, and writes the MP4s.
+
+Build outputs (`clips/`, `shots/`, `audio/`, `tools/.venv/`) are git-ignored. The AI scenes need a configured LLM. The ops
+analyst takes 40–80 s per answer, so `record.py` asks it before the scene starts.
+
+## Sharing a public preview safely
+
+A guest preview through a free Cloudflare quick tunnel (no account, the URL changes on every start):
+
+```bash
+# 1. Serve with production settings: demo sign-in off, own signing key, no LLM credentials
+HP_ENV=production HP_SECRET_KEY="$(python3 -c 'import secrets; print(secrets.token_urlsafe(48))')" \
+  ANTHROPIC_API_KEY= OPENAI_API_KEY= ANTHROPIC_AUTH_TOKEN= \
+  .venv/bin/python -m uvicorn healthpulse.api.main:app --host 127.0.0.1 --port 18880 --workers 1
+# 2. Expose it
+cloudflared tunnel --no-autoupdate --url http://127.0.0.1:18880
+```
+
+Check before sharing the link:
+
+- `GET /api/v1/auth/demo-accounts` must return **404**. With `HP_ENV=local|demo|test` it hands out demo tokens, including admin.
+- `GET /api/v1/me` must say `"Public viewer"` (read-only).
+- Never expose an instance that signs with the placeholder `HP_SECRET_KEY` from `.env.example`. Demo tokens are an HMAC of
+  it, so anyone who has read this code could mint an admin token.
+- Leave LLM keys unset on public instances unless you accept usage by anonymous visitors.
+
+Stop sharing with `pkill cloudflared`. **Secrets:** `.env` is git-ignored and must stay that way. Put keys only in `.env`
+or environment variables, never in code, docs or decks.
 
 ## IMDC 2026 benchmark (Infodengue-Mosqlimate Dengue Challenge)
 

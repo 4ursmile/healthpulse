@@ -1,0 +1,41 @@
+TerraAegis / HealthPulse: submission references
+Checked 14 November2026.
+
+[1] ILO (2024). Climate change and worker health.
+https://www.ilo.org/node/651561
+
+[2] WHO & WMO (2025). Climate change and workplace heat stress.
+https://www.who.int/publications/i/item/9789240099814
+
+[3] Clarke et al. (2024). OpenDengue. Scientific Data 11, 296.
+https://doi.org/10.1038/s41597-024-03120-7
+
+[4] NASA POWER. Meteorological data and methodology.
+https://power.larc.nasa.gov/docs/methodology/
+
+[5] OCHA / HDX. Viet Nam administrative boundaries, COD-AB v02.
+https://data.humdata.org/dataset/3cb544a9-9d04-4f54-94e2-93230efd8ceb
+
+[6] TerraAegis (2026). Brazil replay and forecast evaluation.
+Evidence/brazil-retro.json; Evidence/brazil-benchmark.json
+
+[7] TerraAegis (2026). Viet Nam model and calibration outputs.
+Evidence/vietnam-model-summary.json; Evidence/vietnam-calibration-summary.json
+
+[8] OpenDengue dataset, release V1.3 used by this prototype.
+https://github.com/OpenDengue/master-repo/tree/main/data/releases/V1.3
+
+Data rights and sensitivity
+OpenDengue V1.3: CC BY 4.0 (repository attribution applies). NASA POWER: public data, cite NASA POWER. OCHA COD-AB: source attribution as supplied in the dataset manifest. WHO GHO workforce/system data used in the project carries CC BY-NC-SA 3.0 IGO in its source manifest. GADM polygons have academic/non-commercial restrictions and are used as a crosswalk, not redrawn on these slides. No individual worker data is used. Public access does not establish unrestricted commercial-use rights.
+
+Software: Preact/htm MIT; MapLibre GL 4.7.1 BSD-3-Clause; IBM Plex 5.1.1 OFL.
+
+Evidence files are internal evaluations. They are not official competition rankings or independent validation. Brazil forecasts are reported probable dengue notifications. Vietnam post-2010 provincial outputs are estimates. The map basis contains 34 provinces/cities. The worker heat-risk extension remains proposed.
+
+Evidence hashes (SHA-256):
+BRAZIL_CASE_STUDY.md f2738d40cf3c33ea6c0d35ea717b2d76d4825101f7c164f40704d8d5294a5ba2
+LIMITATIONS.md 224da1f2654912a4e95bc3c7d0477ef39df80c21e80e10a9c8590adf82e85938
+brazil-benchmark.json ec2af8d009ba98c6a7ac5bf8b79f3bedc9cef1ee609739add21df81295515941
+brazil-retro.json 495f922298539fa5cc0cfb8f16e55b52e6576d0f2a28ac8d92c1d4ff200a5be6
+vietnam-calibration-summary.json 4286ae1c71c0c0c2550ad7570124d6a5b97e72a732a298223f965ae20ecd48e5
+vietnam-model-summary.json c4fbc1401f2766cdeb5ba015367cd7b011d1a42d12a75cfe88192c17e681dbb0

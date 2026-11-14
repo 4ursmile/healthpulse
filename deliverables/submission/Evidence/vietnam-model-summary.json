@@ -1,0 +1,26 @@
+{
+  "climate_coefficients": {
+    "cold below 20 \u00b0C (lag 1)": -0.0635650019802849,
+    "heat above 27 \u00b0C\u00b2 (lag 1)": -0.05384100428944214,
+    "humidity anomaly (lag 1)": 0.04134767737586847,
+    "rain anomaly (lag 1)": 0.0011647204702474147,
+    "rain anomaly (lag 2)": 0.005131605654825524,
+    "temp anomaly (lag 1)": 0.2327477817636529
+  },
+  "estimate_month": "2026-11-01",
+  "fitted_at": "2026-11-03T04:30:33.434378+00:00",
+  "holdout_2010": {
+    "deviance_explained": 0.44454143533635115,
+    "deviance_explained_seasonal_only": 0.4363731683508144,
+    "mae": 201.14057711385317,
+    "mae_seasonal_only": 206.27349390425442
+  },
+  "kappa": 1.4152754907543263,
+  "kappa_basis": "WHO national reports 2019-11-01..2025-03-01 \u00f7 model sum",
+  "latest_weather_month": "2026-10-01",
+  "method": "Poisson GLM (scikit-learn), province + region\u00d7month + lagged climate",
+  "national_months_compared": 130,
+  "national_shape_corr_2011_on": 0.9095590696988605,
+  "rows": 2856,
+  "train_period": "2004-01..2010-12"
+}

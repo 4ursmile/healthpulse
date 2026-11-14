@@ -1,0 +1,32 @@
+{
+  "team": [
+    "Hoang Bao Ly Tran",
+    "Thanh Minh Lê"
+  ],
+  "team_name": "TerraAegis",
+  "sources": [
+    "data/sprint/report.json",
+    "data/sprint/retro_2023_24.json",
+    "https://www.ilo.org/node/651561"
+  ],
+  "replay": {
+    "state_seasons": 26,
+    "epidemic": 19,
+    "detected_before_status_quo": 19,
+    "missed": 0,
+    "lead_weeks_median": 6.0,
+    "lead_weeks_mean": 7.315789473684211,
+    "false_alarms": 1,
+    "non_epidemic": 7,
+    "false_alarm_rate": 0.14285714285714285,
+    "alerts_more_than_8_weeks_early": 5,
+    "lead_weeks_median_crossed_before_peak": 5.0,
+    "crossed_before_peak": 13,
+    "flat_comparator": {
+      "lead_weeks_median": 4.0,
+      "lead_weeks_median_crossed_before_peak": 3.0,
+      "missed": 0,
+      "false_alarms": 0
+    }
+  }
+}
